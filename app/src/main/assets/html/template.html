@@ -1,0 +1,86 @@
+<html>
+<head>
+    <style type="text/css">
+        @font-face { font-family: Chivo-Regular; src: url('file:///android_asset/fonts/Chivo-Regular.ttf');}
+        @font-face { font-family: OpenSans-Regular; src: url('file:///android_asset/fonts/OpenSans-Regular.ttf');}
+        @font-face { font-family: Roboto-Mono-Regular; src: url('file:///android_asset/fonts/Roboto-Mono-Regular.ttf');}
+
+        img {
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+
+        body {
+            padding: 0px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            margin-right: 30px;
+            -webkit-column-gap: 60px;
+            background-color: ${background-color};
+        }
+
+        p {
+            margin: 0px;
+            padding: 6px 0px 0px 0px;
+        }
+
+        .title {
+             font-size: 120%;
+        }
+
+        #content {
+            font-family: '${font-family}';
+            font-size: ${font-size}px;
+            color: ${background-color};
+            text-align: justify;
+            line-height: 170%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        ${content}
+    </div>
+
+    <script>
+        function init() {
+            var d = document.getElementsByTagName('body')[0];
+
+            var ourHeight = window.innerHeight;
+            var ourWidth = window.innerWidth;
+            var fullHeight = d.offsetHeight;
+            var pageCount = Math.floor((fullHeight-60) / (ourHeight-60)) + 1;
+            var newWidth = pageCount * ourWidth;
+            d.style.height = ourHeight-60 + 'px';
+            d.style.width = newWidth-60 + 'px';
+            d.style.webkitColumnCount = pageCount;
+
+            var page = ${page};
+            if (page == -1) {
+                page = pageCount;
+            }
+
+            $("body").scrollLeft(window.innerWidth * page);
+
+            var maxPageCount = Math.floor(${content-size} / ($('body').html().length/pageCount));
+            android.getPageCounts(pageCount, maxPageCount);
+
+            $('#content').css('color', '${font-color}');
+        }
+
+        function setPage(page) {
+            $("body").animate({scrollLeft: window.innerWidth*page});
+        }
+
+        document.onclick = globalOnClickHandler;
+        function globalOnClickHandler() {
+            var s = window.getSelection();
+            s.modify('move','backward', 'word');
+            s.modify('extend','forward', 'word');
+            android.onTextSelected(s.toString());
+        }
+    </script>
+</body>
+</html>

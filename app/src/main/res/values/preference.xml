@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_nightmode">pref_nightmode</string>
+
+    <string name="pref_margin_default">40</string>
+
+    <string name="pref_margin_top_title">Margin top</string>
+    <string name="pref_margin_top">pref_margin_top</string>
+
+    <string name="pref_margin_bottom_title">Margin bottom</string>
+    <string name="pref_margin_bottom">pref_margin_bottom</string>
+
+    <string name="pref_margin_left_title">Margin left</string>
+    <string name="pref_margin_left">pref_margin_left</string>
+
+    <string name="pref_margin_right_title">Margin right</string>
+    <string name="pref_margin_right">pref_margin_right</string>
+
+    <string name="pref_font_family_title">Font</string>
+    <string name="pref_font_family">pref_font_family</string>
+    <string name="pref_font_family_default">OpenSans-Regular</string>
+    <string-array name="pref_font_family_entries">
+        <item>OpenSans</item>
+        <item>Chivo</item>
+        <item>Roboto</item>
+    </string-array>
+    <string-array name="pref_font_family_values">
+        <item>OpenSans-Regular</item>
+        <item>Chivo-Regular</item>
+        <item>Roboto-Mono-Regular</item>
+    </string-array>
+
+    <string name="pref_font_size_title">Font size</string>
+    <string name="pref_font_size">pref_font_size</string>
+    <string name="pref_font_size_default">16</string>
+
+    <string name="pref_font_color_title">Font color</string>
+    <string name="pref_font_color">pref_font_color</string>
+
+    <string name="pref_background_color_title">Background color</string>
+    <string name="pref_background_color">pref_background_color</string>
+</resources>

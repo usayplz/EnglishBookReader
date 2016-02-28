@@ -1,0 +1,48 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.lb.material_preferences_library.custom_preferences.ListPreference
+        android:defaultValue="@string/pref_font_family_default"
+        android:key="@string/pref_font_family"
+        android:title="@string/pref_font_family_title"
+        app:dialogTitle="@string/pref_font_family_title"
+        app:entries="@array/pref_font_family_entries"
+        app:entryValues="@array/pref_font_family_values"/>
+
+    <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
+        android:defaultValue="@string/pref_font_size_default"
+        android:enabled="true"
+        android:key="@string/pref_font_size"
+        android:title="@string/pref_font_size_title"
+        app:negativeButtonText="@android:string/cancel"
+        app:positiveButtonText="@android:string/ok"/>
+
+    <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
+        android:defaultValue="@string/pref_margin_default"
+        android:key="@string/pref_margin_top"
+        android:title="@string/pref_margin_top_title"
+        app:negativeButtonText="@android:string/cancel"
+        app:positiveButtonText="@android:string/ok"/>
+
+    <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
+        android:defaultValue="@string/pref_margin_default"
+        android:key="@string/pref_margin_bottom"
+        android:title="@string/pref_margin_bottom_title"
+        app:negativeButtonText="@android:string/cancel"
+        app:positiveButtonText="@android:string/ok"/>
+
+    <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
+        android:defaultValue="@string/pref_margin_default"
+        android:key="@string/pref_margin_left"
+        android:title="@string/pref_margin_left_title"
+        app:negativeButtonText="@android:string/cancel"
+        app:positiveButtonText="@android:string/ok"/>
+
+    <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
+        android:defaultValue="@string/pref_margin_default"
+        android:key="@string/pref_margin_right"
+        android:title="@string/pref_margin_right_title"
+        app:negativeButtonText="@android:string/cancel"
+        app:positiveButtonText="@android:string/ok"/>
+
+</PreferenceScreen>
