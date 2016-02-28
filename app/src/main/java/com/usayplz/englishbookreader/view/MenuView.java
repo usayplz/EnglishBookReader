@@ -38,7 +38,7 @@ public class MenuView extends AlertDialog implements View.OnClickListener {
             dialog.cancel();
         });
 
-        float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
+        float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getContext().getResources().getDimension(R.dimen.menu_width), context.getResources().getDisplayMetrics());
         this.getWindow().setLayout((int) width, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         ButterKnife.findById(view, R.id.menu_settings).setOnClickListener(this);

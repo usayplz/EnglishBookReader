@@ -111,7 +111,6 @@ public class EBookView extends WebView {
     }
 
     private File modifyContent(BookSettings bookSettings) {
-        Log.d(new Exception("fucking exception"));
         String template = FileUtils.loadAsset(getContext(), BOOK_TEMPLATE);
         if (Strings.isEmpty(template)) {
             Log.d("Cannot load template");
@@ -198,8 +197,8 @@ public class EBookView extends WebView {
     }
 
     @JavascriptInterface
-    public void getPageCounts(String pageCount, String maxPageCount) {
-        if (listener != null) listener.onGetPageCounts(Integer.parseInt(pageCount), Integer.parseInt(maxPageCount));
+    public void getPageCounts(String pageCount) {
+        if (listener != null) listener.onGetPageCounts(Integer.parseInt(pageCount));
     }
 
     public void setListener(EBookListener listener) {
@@ -210,6 +209,6 @@ public class EBookView extends WebView {
         void onTextSelected(String word);
         void onNext();
         void onPrevious();
-        void onGetPageCounts(int pagecount, int maxPageCount);
+        void onGetPageCounts(int pagecount);
     }
 }

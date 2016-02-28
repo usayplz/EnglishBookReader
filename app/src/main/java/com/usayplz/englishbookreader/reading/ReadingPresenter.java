@@ -30,17 +30,17 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     public ReadingPresenter(Book book) {
         this.book = book;
         this.page = book.getPage();
-        this.pageCount = this.page;
-        this.maxPageCount = this.page;
+        this.pageCount = 0;
+        this.maxPageCount = 0;
     }
 
     public void getContent() {
         if (isViewAttached()) {
-            getView().showLoading(R.string.progress_message);
-            isLoading = true;
-
             AbstractBookManager bookManager = getBookManager(book.getType());
             PreferencesManager preferencesManager = new PreferencesManager();
+
+            getView().showLoading(R.string.progress_message);
+            isLoading = true;
 
             Observable.combineLatest(
                     bookManager.getContent(book),
@@ -82,6 +82,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void savePage(int page) {
         book.setPage(page);
+        // TODO add save to db (update(book))
     }
 
     public void nextPage() {
@@ -116,10 +117,10 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         }
     }
 
-    public void setPageCounts(int pageCount, int maxPageCount) {
+    public void setPageCounts(int pageCount) {
         isLoading = false;
         this.pageCount = pageCount;
-        this.maxPageCount = maxPageCount;
+        this.maxPageCount = maxPageCount + pageCount;
         if (this.page < 0) {
             this.page = pageCount;
             savePage(this.page);

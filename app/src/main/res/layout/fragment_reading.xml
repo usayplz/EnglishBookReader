@@ -4,12 +4,49 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="0dp">
+    android:padding="0dp"
+    android:id="@+id/main"
+    android:layout_margin="0dp">
+
+    <View
+        android:id="@+id/left"
+        android:layout_width="@dimen/book_default_padding"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <View
+        android:id="@+id/right"
+        android:layout_width="@dimen/book_default_padding"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 
     <com.usayplz.englishbookreader.view.EBookView
         android:id="@+id/book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="0dp"
-        android:padding="0dp" />
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/top"
+        android:layout_toEndOf="@+id/left"
+        android:layout_toLeftOf="@+id/right"
+        android:layout_toRightOf="@+id/left"
+        android:layout_toStartOf="@+id/right"/>
+
+
+    <View
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/book_default_padding"
+        android:layout_alignParentTop="true"/>
+
+    <ImageView
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/book_default_padding"
+        android:layout_alignParentBottom="true"
+        android:scaleType="center"
+        android:src="@drawable/ic_more_horiz"
+        android:contentDescription="@string/app_name"/>
+
 </RelativeLayout>
