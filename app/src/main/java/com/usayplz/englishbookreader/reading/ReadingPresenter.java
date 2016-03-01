@@ -117,7 +117,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         }
     }
 
-    public void setPageCounts(int pageCount) {
+    public void setPageCount(int pageCount) {
         isLoading = false;
         this.pageCount = pageCount;
         this.maxPageCount = maxPageCount + pageCount;

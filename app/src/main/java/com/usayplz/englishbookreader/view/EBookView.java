@@ -137,12 +137,6 @@ public class EBookView extends WebView {
         template = template.replace("${font-size}", bookSettings.getSettings().getFontSize().toString());
         template = template.replace("${font-color}", Strings.colorToRGB(bookSettings.getSettings().getFontColor()));
         template = template.replace("${background-color}", Strings.colorToRGB(bookSettings.getSettings().getBackgroundColor()));
-        template = template.replace("${content-size}", bookSettings.getBook().getContentSize().toString());
-
-        template = template.replace("${padding-top}", bookSettings.getSettings().getMarginTop().toString());
-        template = template.replace("${padding-bottom}", bookSettings.getSettings().getMarginBottom().toString());
-        template = template.replace("${padding-left}", bookSettings.getSettings().getMarginLeft().toString());
-        template = template.replace("${padding-right}", bookSettings.getSettings().getMarginRight().toString());
 
         File file = FileUtils.concatToFile(bookSettings.getBook().getDir(), "template.html");
         try {
@@ -197,8 +191,8 @@ public class EBookView extends WebView {
     }
 
     @JavascriptInterface
-    public void getPageCounts(String pageCount) {
-        if (listener != null) listener.onGetPageCounts(Integer.parseInt(pageCount));
+    public void getPageCount(String pageCount) {
+        if (listener != null) listener.onGetPageCount(Integer.parseInt(pageCount));
     }
 
     public void setListener(EBookListener listener) {
@@ -209,6 +203,6 @@ public class EBookView extends WebView {
         void onTextSelected(String word);
         void onNext();
         void onPrevious();
-        void onGetPageCounts(int pagecount);
+        void onGetPageCount(int pagecount);
     }
 }

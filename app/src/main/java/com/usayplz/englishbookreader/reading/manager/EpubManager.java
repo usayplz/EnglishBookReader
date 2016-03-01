@@ -28,7 +28,6 @@ public class EpubManager extends AbstractBookManager {
                 book.setAuthor(epubBook.getMetadata().getAuthors().toString());
                 book.setTitle(epubBook.getTitle());
                 book.setMaxChapter(epubBook.getContents().size()-1);
-                book.setContentSize(getContentSize(epubBook));
             } catch (IOException e) {
                 return Observable.error(e);
             }

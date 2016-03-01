@@ -19,6 +19,7 @@ import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookSettings;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
+import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.view.EBookView;
 import com.usayplz.englishbookreader.view.MenuView;
 import com.usayplz.englishbookreader.view.ProgressDialog;
@@ -112,11 +113,12 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
 
     private void applySettings(Settings settings) {
         mainView.setBackgroundColor(settings.getBackgroundColor());
+        bookView.setBackgroundColor(settings.getBackgroundColor());
 
-        leftView.getLayoutParams().width = settings.getMarginLeft();
         rightView.getLayoutParams().width = settings.getMarginRight();
-        topView.getLayoutParams().height = settings.getMarginTop();
         bottomView.getLayoutParams().height= settings.getMarginBottom();
+        leftView.getLayoutParams().width = settings.getMarginLeft();
+        topView.getLayoutParams().height = settings.getMarginTop();
     }
 
     @Override
@@ -142,6 +144,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     @Override
     public void setPage(int page) {
         bookView.setPage(page);
+        Log.d("page: " + page);
     }
 
     @Override
@@ -165,8 +168,8 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     }
 
     @Override
-    public void onGetPageCounts(int pagecount) {
-        presenter.setPageCounts(pagecount);
+    public void onGetPageCount(int pagecount) {
+        presenter.setPageCount(pagecount);
     }
 
     @Override

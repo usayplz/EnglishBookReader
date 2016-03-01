@@ -24,16 +24,15 @@ public class Book implements Serializable {
     private Boolean active;
     private Integer chapter;
     private Integer maxChapter;
-    private Integer contentSize;
 
     public Book() {
     }
 
     // TODO remove example
     public Book(Context context) {
-//        String filePath = "/storage/sdcard/Download/johnny.epub";
-        String filePath = "/storage/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
-//        String filePath = "/mnt/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
+//        String filePath = "/mnt/sdcard/Download/johnny.epub";
+//        String filePath = "/storage/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
+        String filePath = "/mnt/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
         File fileBook = new File(filePath);
         File dirBook = FileUtils.concatToFile(context.getFilesDir().getPath(), fileBook.getName() + fileBook.length());
 
@@ -47,7 +46,6 @@ public class Book implements Serializable {
         this.maxChapter = 58;
         this.page = 0;
         this.active = true;
-        this.contentSize = 1193214;
     }
 
     public long getId() {
@@ -136,14 +134,6 @@ public class Book implements Serializable {
 
     public void setMaxChapter(Integer maxChapter) {
         this.maxChapter = maxChapter;
-    }
-
-    public Integer getContentSize() {
-        return contentSize;
-    }
-
-    public void setContentSize(Integer contentSize) {
-        this.contentSize = contentSize;
     }
 
     public enum BookType {

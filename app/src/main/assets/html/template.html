@@ -13,7 +13,6 @@
         body {
             padding: 0px;
             margin: 0px;
-            -webkit-column-gap: 2px;
             background-color: ${background-color};
         }
 
@@ -39,21 +38,21 @@
 </head>
 
 <body>
-    <div id="content">
-        ${content}
-    </div>
+    <div id="content">${content}</div>
 
     <script>
         function init() {
             var d = document.getElementsByTagName('body')[0];
 
+            var columnGap = 2;
             var ourHeight = window.innerHeight;
             var ourWidth = window.innerWidth;
             var fullHeight = d.offsetHeight;
-            var pageCount = Math.floor(fullHeight / (ourHeight-2)) + 1;
+            var pageCount = Math.floor(fullHeight / (ourHeight + columnGap));
             var newWidth = pageCount * ourWidth;
             d.style.height = ourHeight + 'px';
             d.style.width = newWidth + 'px';
+            d.style.webkitColumnGap = columnGap + 'px';
             d.style.webkitColumnCount = pageCount;
 
             var page = ${page};
@@ -63,7 +62,7 @@
 
             $("body").scrollLeft(window.innerWidth * page);
             $('#content').css('color', '${font-color}');
-            android.getPageCounts(pageCount);
+            android.getPageCount(pageCount);
         }
 
         function setPage(page) {
