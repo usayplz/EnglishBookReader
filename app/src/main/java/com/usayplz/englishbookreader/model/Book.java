@@ -5,6 +5,8 @@ import android.database.Cursor;
 
 import com.usayplz.englishbookreader.db.Db;
 
+import java.io.Serializable;
+
 import rx.functions.Func1;
 
 /**
@@ -12,7 +14,7 @@ import rx.functions.Func1;
  * u.sayplz@gmail.com
  */
 
-public class Book {
+public class Book implements Serializable {
     public static final String TABLE = "book";
     public static final String COL_ID = "id";
     public static final String COL_TYPE = "type_code";

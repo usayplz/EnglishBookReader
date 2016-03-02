@@ -103,15 +103,13 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         ReadingMenuItem readingMenuItem = ReadingMenuItem.byId(item.getItemId());
         if (readingMenuItem == null) return false;
 
-        Intent intent;
         switch (readingMenuItem) {
             case SETTINGS:
-                intent = new Intent(getActivity(), PreferencesActivity.class);
+                Intent intent = new Intent(getActivity(), PreferencesActivity.class);
                 startActivityForResult(intent, PreferencesActivity.SETTINGS_CHANGED_REQUEST);
                 return true;
             case LIBRARY:
-                intent = new Intent(getActivity(), LibraryActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getActivity(), LibraryActivity.class));
                 return true;
             case EXIT:
                 getActivity().finish();
