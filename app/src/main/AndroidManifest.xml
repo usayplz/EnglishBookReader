@@ -9,25 +9,31 @@
     <application
         android:name=".BookApplication"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".libraly.LibraryActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity
+            android:name=".reading.ReadingActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
             android:name=".preference.PreferencesActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/settings"/>
+            android:label="@string/settings"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

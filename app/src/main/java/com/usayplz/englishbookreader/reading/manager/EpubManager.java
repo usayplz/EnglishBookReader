@@ -1,6 +1,7 @@
 package com.usayplz.englishbookreader.reading.manager;
 
 import com.usayplz.englishbookreader.model.Book;
+import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.utils.FileUtils;
 
 import java.io.File;
@@ -20,14 +21,17 @@ public class EpubManager extends AbstractBookManager {
     @Override
     public Observable<Book> getBookInfo(String filePath) {
         return Observable.defer(() -> {
-            Book book = newBook();
+            Book book = new Book();
+            book.setType(BookType.EPUB);
+            book.setChapter(1);
+            book.setPage(0);
             book.setFile(filePath);
 
             try {
                 nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(filePath));
                 book.setAuthor(epubBook.getMetadata().getAuthors().toString());
                 book.setTitle(epubBook.getTitle());
-                book.setMaxChapter(epubBook.getContents().size()-1);
+                book.setMaxChapter(epubBook.getContents().size() - 1);
             } catch (IOException e) {
                 return Observable.error(e);
             }
@@ -53,21 +57,5 @@ public class EpubManager extends AbstractBookManager {
                 return Observable.error(e);
             }
         });
-    }
-
-    private int getContentSize(nl.siegmann.epublib.domain.Book epubBook) throws IOException {
-        int length = 0;
-        for (int i=1; i<=epubBook.getContents().size()-1; i++) {
-            length += new String(epubBook.getContents().get(i).getData()).length();
-        }
-        return length;
-    }
-
-    private Book newBook() {
-        Book book = new Book();
-        book.setType(Book.BookType.EPUB);
-        book.setChapter(1);
-        book.setPage(0);
-        return book;
     }
 }

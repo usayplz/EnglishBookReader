@@ -7,10 +7,13 @@
     <string name="error_limit_margin">Margin must be between 10 and 100</string>
 
     <!-- Menu -->
+    <string name="menu_title">Menu</string>
     <string name="settings">Settings</string>
     <string name="library">Library</string>
     <string name="exit">Exit</string>
     <string name="nightmode">Night Mode</string>
+    <string name="add_bookmark">Add Bookmark</string>
+    <string name="bookmarks">Bookmarks…</string>
 
     <string name="progress_message">Loading…</string>
 </resources>

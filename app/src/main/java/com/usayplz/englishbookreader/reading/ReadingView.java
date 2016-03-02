@@ -9,11 +9,5 @@ import com.usayplz.englishbookreader.model.BookSettings;
  */
 public interface ReadingView extends BaseView {
     void showContent(BookSettings bookSettings);
-
-    void showError(int error);
-
-    void showLoading(int message);
-    void hideLoading();
-
     void setPage(int page);
 }

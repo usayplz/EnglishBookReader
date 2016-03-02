@@ -29,7 +29,7 @@ import java.io.IOException;
  * u.sayplz@gmail.com
  */
 public class EBookView extends WebView {
-    private static final float SCROLL_THRESHOLD = 0.2f;
+    private static final float SCROLL_THRESHOLD = 0.1f;
     private static final String BOOK_TEMPLATE = "html/template.html";
 
     private float posX;
@@ -132,7 +132,7 @@ public class EBookView extends WebView {
 
         // replace
         template = template.replace("${content}", content);
-        template = template.replace("${page}", bookSettings.getBook().getPage().toString());
+        template = template.replace("${page}", String.valueOf(bookSettings.getBook().getPage()));
         template = template.replace("${font-family}", bookSettings.getSettings().getFontFamily());
         template = template.replace("${font-size}", bookSettings.getSettings().getFontSize().toString());
         template = template.replace("${font-color}", Strings.colorToRGB(bookSettings.getSettings().getFontColor()));
@@ -201,8 +201,11 @@ public class EBookView extends WebView {
 
     public interface EBookListener {
         void onTextSelected(String word);
+
         void onNext();
+
         void onPrevious();
+
         void onGetPageCount(int pagecount);
     }
 }

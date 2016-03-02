@@ -4,6 +4,7 @@ import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookSettings;
+import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
 import com.usayplz.englishbookreader.reading.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.reading.manager.EpubManager;
@@ -70,7 +71,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         }
     }
 
-    public AbstractBookManager getBookManager(Book.BookType type) {
+    public AbstractBookManager getBookManager(BookType type) {
         switch (type) {
             case EPUB:
                 return new EpubManager();

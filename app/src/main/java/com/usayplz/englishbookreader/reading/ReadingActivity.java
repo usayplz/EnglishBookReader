@@ -1,16 +1,16 @@
-package com.usayplz.englishbookreader;
+package com.usayplz.englishbookreader.reading;
 
 import android.os.Bundle;
 
+import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseActivity;
-import com.usayplz.englishbookreader.reading.ReadingFragment;
 
-public class MainActivity extends BaseActivity {
+public class ReadingActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_reading);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new ReadingFragment()).commit();
     }

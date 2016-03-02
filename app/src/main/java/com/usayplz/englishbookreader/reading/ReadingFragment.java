@@ -1,11 +1,10 @@
 package com.usayplz.englishbookreader.reading;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +14,17 @@ import android.widget.Toast;
 
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseFragment;
+import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookSettings;
+import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
-import com.usayplz.englishbookreader.utils.Log;
+import com.usayplz.englishbookreader.utils.FileUtils;
 import com.usayplz.englishbookreader.view.EBookView;
-import com.usayplz.englishbookreader.view.MenuView;
 import com.usayplz.englishbookreader.view.ProgressDialog;
+
+import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,10 +42,8 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     @Bind(R.id.bottom) ImageView bottomView;
     @Bind(R.id.main) RelativeLayout mainView;
 
-
     private ReadingPresenter presenter;
-    private AlertDialog progressDialog;
-    private MenuView menuView;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,53 +56,70 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         ButterKnife.bind(this, view);
 
         // TODO book from savedInstanceState
-        Book book = new Book(getContext());
+        Book book = new Book();
+//        String filePath = "/mnt/sdcard/Download/johnny.epub";
+//        String filePath = "/storage/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
+        String filePath = "/mnt/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
+        File fileBook = new File(filePath);
+        File dirBook = FileUtils.concatToFile(getContext().getFilesDir().getPath(), fileBook.getName() + fileBook.length());
+        book.setType(BookType.EPUB);
+        book.setFile(fileBook.getPath());
+        // TODO Define OPS dir
+        book.setDir(dirBook.getPath());// + File.separator + "OPS";
+        book.setTitle("Johnny Mnemonic");
+        book.setAuthor("Unknown");
+        book.setChapter(1);
+        book.setMaxChapter(58);
+        book.setPage(0);
+        book.setActive(true);
+
+        // Views
+        bookView.setListener(this);
+        leftView.setOnClickListener(v -> onPrevious());
+        rightView.setOnClickListener(v -> onNext());
+
+        registerForContextMenu(bottomView);
+        bottomView.setOnClickListener(v -> getActivity().openContextMenu(v));
 
         // presenter
         presenter = new ReadingPresenter(book);
         presenter.attachView(this);
         presenter.getContent();
-
-        setUpViews();
-    }
-
-    private void setUpViews() {
-        // Views
-        bookView.setListener(this);
-        leftView.setOnClickListener(v -> onPrevious());
-        rightView.setOnClickListener(v -> onNext());
-        bottomView.setOnClickListener(v -> showMenu());
-
-        // Menu™
-        menuView = new MenuView(getActivity(), v -> {
-            menuView.cancel();
-
-            switch (v.getId()) {
-                case R.id.menu_settings:
-                    Intent intent = new Intent(getActivity(), PreferencesActivity.class);
-                    startActivityForResult(intent, PreferencesActivity.SETTINGS_CHANGED_REQUEST);
-                    break;
-                case R.id.menu_library:
-                    break;
-                case R.id.menu_nightmode:
-                    break;
-                case R.id.menu_exit:
-                    getActivity().finish();
-                    System.exit(0);
-                    break;
-            }
-        });
-    }
-
-    private void showMenu() {
-        menuView.show();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-        presenter.detachView();
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo
+            menuInfo) {
+        menu.setHeaderTitle(R.string.menu_title);
+        for (ReadingMenuItem item : ReadingMenuItem.values()) {
+            menu.add(item.group, item.id, item.order, item.name);
+        }
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        ReadingMenuItem readingMenuItem = ReadingMenuItem.byId(item.getItemId());
+        if (readingMenuItem == null) return false;
+
+        Intent intent;
+        switch (readingMenuItem) {
+            case SETTINGS:
+                intent = new Intent(getActivity(), PreferencesActivity.class);
+                startActivityForResult(intent, PreferencesActivity.SETTINGS_CHANGED_REQUEST);
+                return true;
+            case LIBRARY:
+                intent = new Intent(getActivity(), LibraryActivity.class);
+                startActivity(intent);
+                return true;
+            case EXIT:
+                getActivity().finish();
+                System.exit(0);
+                return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -116,40 +133,21 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         bookView.setBackgroundColor(settings.getBackgroundColor());
 
         rightView.getLayoutParams().width = settings.getMarginRight();
-        bottomView.getLayoutParams().height= settings.getMarginBottom();
+        bottomView.getLayoutParams().height = settings.getMarginBottom();
         leftView.getLayoutParams().width = settings.getMarginLeft();
         topView.getLayoutParams().height = settings.getMarginTop();
     }
 
     @Override
-    public void showError(int error) {
-        Toast.makeText(getContext(), R.string.error_open_book, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void showLoading(int message) {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity(), getString(message));
-        }
-        progressDialog.show();
-    }
-
-    @Override
-    public void hideLoading() {
-        if (progressDialog != null) {
-            progressDialog.cancel();
-        }
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+        presenter.detachView();
     }
 
     @Override
     public void setPage(int page) {
         bookView.setPage(page);
-        Log.d("page: " + page);
-    }
-
-    @Override
-    public Context getContext() {
-        return getActivity().getApplicationContext();
     }
 
     @Override
