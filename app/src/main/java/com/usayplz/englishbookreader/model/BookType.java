@@ -34,6 +34,7 @@ public enum BookType {
 
     public static BookType byExtension(String filePath) {
         filePath = filePath.toLowerCase();
+
         for (BookType bookType : BookType.values()) {
             if (filePath.endsWith(bookType.getExtension())) {
                 return bookType;

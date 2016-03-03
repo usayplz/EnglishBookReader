@@ -3,6 +3,7 @@ package com.usayplz.englishbookreader.libraly;
 import android.os.Environment;
 
 import com.usayplz.englishbookreader.model.Book;
+import com.usayplz.englishbookreader.model.BookType;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -25,7 +26,7 @@ public class BookFindEngine {
             searchFiles(Environment.getExternalStorageDirectory(), files, new FileFilter() {
                 @Override
                 public boolean accept(File f) {
-                    return f.isDirectory() || f.getName().endsWith(".epub"); //TODO: add other formats
+                    return f.isDirectory() || BookType.byExtension(f.getName()) != null; //TODO: add other formats
                 }
             });
 
