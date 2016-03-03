@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/action_scan"
-        android:icon="@android:drawable/ic_dialog_map"
+        android:icon="@drawable/ic_rescan"
         android:showAsAction="always"
         android:title="@string/search"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        tools:ignore="AppCompatResource"/>
 
     <item
         android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="Search Waste Items"
+        android:icon="@drawable/ic_search"
         android:showAsAction="always|collapseActionView"
+        android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always|collapseActionView" />
+        app:showAsAction="always|collapseActionView"
+        tools:ignore="AppCompatResource"/>
 
 </menu>

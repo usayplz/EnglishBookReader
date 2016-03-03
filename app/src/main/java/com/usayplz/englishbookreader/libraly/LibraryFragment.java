@@ -78,6 +78,7 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
     @Override
     public void openBook(long id) {
         Intent intent = new Intent(getActivity(), ReadingActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(UserData.APP_PREF_BOOK_ID, id);
         startActivity(intent);
         getActivity().finish();

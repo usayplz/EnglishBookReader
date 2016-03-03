@@ -86,7 +86,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo
             menuInfo) {
-        menu.setHeaderTitle(R.string.menu_title);
+        menu.setHeaderTitle(null);
         for (ReadingMenuItem item : ReadingMenuItem.values()) {
             menu.add(item.group, item.id, item.order, item.name);
         }
