@@ -2,7 +2,7 @@
 <resources>
     <string name="pref_nightmode">pref_nightmode</string>
 
-    <string name="pref_margin_default">30</string>
+    <string name="pref_margin_default">50</string>
 
     <string name="pref_margin_top_title">Margin top</string>
     <string name="pref_margin_top">pref_margin_top</string>
@@ -32,7 +32,7 @@
 
     <string name="pref_font_size_title">Font size</string>
     <string name="pref_font_size">pref_font_size</string>
-    <string name="pref_font_size_default">16</string>
+    <string name="pref_font_size_default">14</string>
 
     <string name="pref_font_color_title">Font color</string>
     <string name="pref_font_color">pref_font_color</string>

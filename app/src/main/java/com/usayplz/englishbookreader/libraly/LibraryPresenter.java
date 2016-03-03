@@ -8,6 +8,10 @@ import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.preference.UserData;
 import com.usayplz.englishbookreader.reading.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.utils.Log;
+import com.usayplz.englishbookreader.utils.Strings;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -25,9 +29,9 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
         if (getView() != null) {
             UserData userData = new UserData(getView().getContext());
             if (userData.getScanned()) {
-                getBooksFromDb();
+                getBooksDb();
             } else {
-                findBooks();
+                scanDrives();
             }
         }
     }
@@ -40,35 +44,31 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
         }
     }
 
-    public void getBooksFromDb() {
+    public void getBooksDb() {
         if (getView() != null) {
             getView().showLoading(R.string.progress_message);
 
             BookDao bookDao = new BookDao(getView().getContext());
-            bookDao.getAll().subscribe(
-                    books -> {
-                        if (getView() != null) {
-                            getView().hideLoading();
-                            if (books.size() > 0) {
-                                getView().showContent(books);
-                            } else {
-                                getView().showEmpty();
+            bookDao.getAll()
+                    .subscribe(
+                            books -> {
+                                if (getView() != null) {
+                                    getView().hideLoading();
+                                    getView().showContent(books);
+                                }
+                            },
+                            throwable -> {
+                                Log.d(throwable.getMessage());
+                                if (getView() != null) {
+                                    getView().hideLoading();
+                                    getView().showError(R.string.error_load_books);
+                                }
                             }
-                        }
-                    },
-                    throwable -> {
-                        Log.d(throwable.getMessage());
-                        if (getView() != null) {
-                            getView().hideLoading();
-                            getView().showError(R.string.error_load_books);
-                        }
-                    }
-
-            );
+                    );
         }
     }
 
-    public void findBooks() {
+    public void scanDrives() {
         if (getView() != null) {
             getView().showLoading(R.string.progress_message);
 
@@ -79,21 +79,58 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
             BookDao bookDao = new BookDao(getView().getContext());
             bookDao.removeAll();
 
-            BookFindEngine bookFindEngine = new BookFindEngine();
-            bookFindEngine.find()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map(book -> {
+            ScanDriveEngine scanDriveEngine = new ScanDriveEngine();
+            scanDriveEngine.find()
+                    .map(file -> {
+                        Book book = new Book();
+                        book.setFile(file.getPath());
                         book.setType(BookType.byExtension(book.getFile()));
-                        AbstractBookManager bookManager = AbstractBookManager.getBookManager(book.getType());
 
-                        book = bookManager.getBookInfo(book.getFile(), filesDir, default_authors, default_title);
+                        AbstractBookManager bookManager = AbstractBookManager.getBookManager(book.getType());
+                        if (bookManager != null) {
+                            book = bookManager.getBookInfo(book.getFile(), filesDir, default_authors, default_title);
+                        }
                         return book;
                     })
-                    .filter(book -> book != null)
+                    .filter(book -> !Strings.isEmpty(book.getTitle()))
                     .doOnNext(bookDao::add)
-                    .doOnCompleted(this::getBooksFromDb)
+                    .doOnCompleted(() -> {
+                        if (getView() != null) {
+                            new UserData(getView().getContext()).setScanned(true);
+                            getBooksDb();
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(); // TODO need show errors?
+        }
+    }
+
+    public void filterBooks(String query) {
+        final String queryLowerCase = query.toLowerCase();
+
+        if (getView() != null) {
+            BookDao bookDao = new BookDao(getView().getContext());
+            bookDao.getAll()
+                    .map(books -> {
+                        List<Book> result = new ArrayList<>();
+                        for (Book book : books) {
+                            if (book.getTitle().toLowerCase().contains(queryLowerCase)) {
+                                result.add(book);
+                            }
+                        }
+                        return result;
+                    })
+                    .subscribe(
+                            books -> {
+                                if (getView() != null) {
+                                    getView().showContent(books);
+                                }
+                            },
+                            throwable -> {
+                                Log.d(throwable.getMessage());
+                            }
+                    );
         }
     }
 }

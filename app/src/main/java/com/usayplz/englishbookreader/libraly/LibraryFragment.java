@@ -13,7 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseFragment;
@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
  */
 public class LibraryFragment extends BaseFragment implements LibraryView, ShelfAdapter.ShelfAdapterListener {
     @Bind(R.id.shelf) RecyclerView shelfView;
+    @Bind(R.id.nobooks) TextView nobooksView;
 
     private LibraryPresenter presenter;
     private ShelfAdapter adapter;
@@ -50,11 +51,11 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
         // Views
         setHasOptionsMenu(true);
 
-        adapter = new ShelfAdapter(this);
-
         shelfView.setLayoutManager(new LinearLayoutManager(getContext()));
         shelfView.setHasFixedSize(true);
         shelfView.setItemAnimator(new DefaultItemAnimator());
+
+        adapter = new ShelfAdapter(this);
         shelfView.setAdapter(adapter);
 
         // presenter
@@ -72,6 +73,7 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
 
     @Override
     public void showContent(List<Book> books) {
+        nobooksView.setVisibility(View.VISIBLE);
         adapter.setBooks(books);
     }
 
@@ -82,11 +84,6 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
         intent.putExtra(UserData.APP_PREF_BOOK_ID, id);
         startActivity(intent);
         getActivity().finish();
-    }
-
-    @Override
-    public void showEmpty() {
-        Toast.makeText(getContext(), R.string.error_find_books, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -107,6 +104,7 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                presenter.filterBooks(newText);
                 return false;
             }
         });
@@ -116,7 +114,7 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_scan:
-                presenter.findBooks();
+                presenter.scanDrives();
                 break;
         }
 

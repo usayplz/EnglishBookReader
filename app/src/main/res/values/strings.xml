@@ -2,14 +2,14 @@
     <string name="app_name">EnglishBookReader</string>
 
     <!-- Errors-->
-    <string name="error_open_book">Cannot open book</string>
+    <string name="error_open_book">Could not open book</string>
     <string name="error_limit_font_size">Font size must be between 10 and 30</string>
     <string name="error_limit_margin">Margin must be between 10 and 100</string>
-    <string name="error_load_books">Cannot load books</string>
-    <string name="error_find_books">Caanot find books</string>
+    <string name="error_load_books">Could not load books</string>
+    <string name="error_find_books">Could not find books</string>
+    <string name="error_nobooks">Could not find books!</string>
 
     <!-- Menu -->
-    <string name="menu_title">Menu</string>
     <string name="settings">Settings</string>
     <string name="library">Library</string>
     <string name="exit">Exit</string>
@@ -17,6 +17,7 @@
     <string name="add_bookmark">Add Bookmark</string>
     <string name="bookmarks">Bookmarks…</string>
 
+    <!-- Progress bar -->
     <string name="progress_message">Loading…</string>
 
     <!-- Defaults-->
