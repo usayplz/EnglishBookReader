@@ -5,21 +5,39 @@ package com.usayplz.englishbookreader.model;
  * u.sayplz@gmail.com
  */
 public enum BookType {
-    EPUB(0), FB2(1);
+    EPUB(0, ".epub"), FB2(1, ".fb2");
 
     private int code;
+    private String extension;
 
-    private BookType(int code) {
+    private BookType(int code, String extension) {
         this.code = code;
+        this.extension = extension;
     }
 
     public int getCode() {
         return code;
     }
 
+    public String getExtension() {
+        return extension;
+    }
+
     public static BookType byCode(int code) {
         for (BookType bookType : BookType.values()) {
-            if (bookType.code == code) return bookType;
+            if (bookType.code == code) {
+                return bookType;
+            }
+        }
+        return null;
+    }
+
+    public static BookType byExtension(String filePath) {
+        filePath = filePath.toLowerCase();
+        for (BookType bookType : BookType.values()) {
+            if (filePath.endsWith(bookType.getExtension())) {
+                return bookType;
+            }
         }
         return null;
     }

@@ -22,18 +22,4 @@ public abstract class AbstractBookManager {
         }
         return null;
     }
-
-    public static BookType getBookType(String filePath) {
-        filePath = filePath.toUpperCase();
-
-        if (filePath.endsWith("EPUB")) {
-            return BookType.EPUB;
-        }
-
-        if (filePath.endsWith("FB2")) {
-            return BookType.FB2;
-        }
-
-        return null;
-    }
 }
