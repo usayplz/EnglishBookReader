@@ -12,7 +12,7 @@ public class UserData {
 
     private static final String APP_PREF_USER_DATA = "user_data";
     public static final String APP_PREF_BOOK_ID = "book_id";
-    
+
     public UserData(Context context) {
         userData = context.getSharedPreferences(APP_PREF_USER_DATA, Context.MODE_PRIVATE);
     }

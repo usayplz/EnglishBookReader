@@ -5,6 +5,7 @@
     <string name="error_open_book">Cannot open book</string>
     <string name="error_limit_font_size">Font size must be between 10 and 30</string>
     <string name="error_limit_margin">Margin must be between 10 and 100</string>
+    <string name="error_load_books">Cannot load books</string>
 
     <!-- Menu -->
     <string name="menu_title">Menu</string>

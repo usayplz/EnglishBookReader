@@ -16,18 +16,17 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".libraly.LibraryActivity"
-            android:label="@string/app_name"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            android:label="@string/library">
         </activity>
 
         <activity
             android:name=".reading.ReadingActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <activity
