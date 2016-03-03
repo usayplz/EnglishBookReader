@@ -15,7 +15,6 @@ import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.preference.UserData;
 import com.usayplz.englishbookreader.reading.ReadingActivity;
-import com.usayplz.englishbookreader.utils.Log;
 
 import java.util.List;
 
@@ -78,7 +77,6 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
 
     @Override
     public void onBookClicked(int position) {
-        Log.d("clicked");
         presenter.loadBook(adapter.getBook(position));
     }
 }
