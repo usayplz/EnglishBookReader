@@ -12,5 +12,7 @@ import java.util.List;
 public interface LibraryView extends BaseView {
     void showContent(List<Book> books);
 
-    void showBook(long id);
+    void openBook(long id);
+
+    void showEmpty();
 }

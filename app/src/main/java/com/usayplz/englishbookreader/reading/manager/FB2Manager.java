@@ -9,9 +9,10 @@ import rx.Observable;
  * u.sayplz@gmail.com
  */
 public class FB2Manager extends AbstractBookManager {
+
     @Override
-    public Observable<Book> getBookInfo(String filePath) {
-        return Observable.just(new Book());
+    public Book getBookInfo(String filePath, String filesPath, String default_authors, String default_title) {
+        return new Book();
     }
 
     @Override

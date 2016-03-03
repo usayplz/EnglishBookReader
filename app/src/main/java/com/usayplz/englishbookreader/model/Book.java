@@ -24,7 +24,6 @@ public class Book implements Serializable {
     public static final String COL_AUTHOR = "author";
     public static final String COL_COVERIMAGE = "cover_image";
     public static final String COL_PAGE = "page";
-    public static final String COL_ACTIVE = "active";
     public static final String COL_CHAPTER = "chapter";
     public static final String COL_MAXCHAPTER = "max_chapter";
 
@@ -38,7 +37,6 @@ public class Book implements Serializable {
             + COL_AUTHOR + " TEXT,"
             + COL_COVERIMAGE + " TEXT,"
             + COL_PAGE + " INTEGER,"
-            + COL_ACTIVE + " INTEGER,"
             + COL_CHAPTER + " INTEGER,"
             + COL_MAXCHAPTER + " INTEGER"
             + ")";
@@ -52,7 +50,6 @@ public class Book implements Serializable {
     private String author;
     private String coverImage;
     private int page;
-    private boolean active;
     private int chapter;
     private int maxChapter;
 
@@ -130,14 +127,6 @@ public class Book implements Serializable {
         this.page = page;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     public int getChapter() {
         return chapter;
     }
@@ -164,7 +153,6 @@ public class Book implements Serializable {
         book.author = Db.getString(cursor, COL_AUTHOR);
         book.coverImage = Db.getString(cursor, COL_COVERIMAGE);
         book.page = Db.getInt(cursor, COL_PAGE);
-        book.active = Db.getBoolean(cursor, COL_ACTIVE);
         book.chapter = Db.getInt(cursor, COL_CHAPTER);
         book.maxChapter = Db.getInt(cursor, COL_MAXCHAPTER);
         return book;
@@ -180,7 +168,6 @@ public class Book implements Serializable {
         values.put(COL_AUTHOR, author);
         values.put(COL_COVERIMAGE, coverImage);
         values.put(COL_PAGE, page);
-        values.put(COL_ACTIVE, active);
         values.put(COL_CHAPTER, chapter);
         values.put(COL_MAXCHAPTER, maxChapter);
 

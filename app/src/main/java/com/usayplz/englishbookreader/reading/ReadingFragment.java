@@ -22,7 +22,6 @@ import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
 import com.usayplz.englishbookreader.utils.FileUtils;
 import com.usayplz.englishbookreader.view.EBookView;
-import com.usayplz.englishbookreader.view.ProgressDialog;
 
 import java.io.File;
 
@@ -43,7 +42,6 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     @Bind(R.id.main) RelativeLayout mainView;
 
     private ReadingPresenter presenter;
-    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +54,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         ButterKnife.bind(this, view);
 
         // TODO book from savedInstanceState
-        Book book = new Book();
+                Book book = new Book();
 //        String filePath = "/mnt/sdcard/Download/johnny.epub";
 //        String filePath = "/storage/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
         String filePath = "/mnt/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
@@ -70,8 +68,6 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         book.setAuthor("Unknown");
         book.setChapter(1);
         book.setMaxChapter(58);
-        book.setPage(0);
-        book.setActive(true);
 
         // Views
         bookView.setListener(this);

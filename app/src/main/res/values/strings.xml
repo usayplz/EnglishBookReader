@@ -6,6 +6,7 @@
     <string name="error_limit_font_size">Font size must be between 10 and 30</string>
     <string name="error_limit_margin">Margin must be between 10 and 100</string>
     <string name="error_load_books">Cannot load books</string>
+    <string name="error_find_books">Caanot find books</string>
 
     <!-- Menu -->
     <string name="menu_title">Menu</string>
@@ -17,4 +18,9 @@
     <string name="bookmarks">Bookmarks…</string>
 
     <string name="progress_message">Loading…</string>
+
+    <!-- Defaults-->
+    <string name="default_book_authors">Unknown</string>
+    <string name="default_book_title">Unknown</string>
+    <string name="search">Search</string>
 </resources>

@@ -26,9 +26,9 @@ import butterknife.ButterKnife;
  */
 public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> {
     private List<Book> books;
-    private IAdapterListener listener;
+    private ShelfAdapterListener listener;
 
-    public ShelfAdapter(IAdapterListener listener) {
+    public ShelfAdapter(ShelfAdapterListener listener) {
         this.books = new ArrayList<>();
         this.listener = listener;
     }
@@ -75,19 +75,19 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
         @Bind(R.id.title) TextView title;
         @Bind(R.id.authors) TextView authors;
 
-        public ViewHolder(View itemView, IAdapterListener listener) {
+        public ViewHolder(View itemView, ShelfAdapterListener listener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onBookClicked(this.getAdapterPosition());
+                    listener.onShelfClicked(this.getAdapterPosition());
                 }
             });
         }
     }
 
-    public interface IAdapterListener {
-        void onBookClicked(int position);
+    public interface ShelfAdapterListener {
+        void onShelfClicked(int position);
     }
 }

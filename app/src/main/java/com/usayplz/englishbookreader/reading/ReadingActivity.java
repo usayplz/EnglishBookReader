@@ -7,6 +7,7 @@ import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseActivity;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.preference.UserData;
+import com.usayplz.englishbookreader.utils.Log;
 
 public class ReadingActivity extends BaseActivity {
 
@@ -17,6 +18,7 @@ public class ReadingActivity extends BaseActivity {
 
         // Check book is opened
         long bookId = new UserData(this).getBookId();
+        Log.d("activity0: " + bookId);
         if (bookId > 0) {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ReadingFragment()).commit();
         } else {

@@ -6,9 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseFragment;
@@ -26,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by Sergei Kurikalov on 01/03/16.
  * u.sayplz@gmail.com
  */
-public class LibraryFragment extends BaseFragment implements LibraryView, ShelfAdapter.IAdapterListener {
+public class LibraryFragment extends BaseFragment implements LibraryView, ShelfAdapter.ShelfAdapterListener {
     @Bind(R.id.shelf) RecyclerView shelfView;
 
     private LibraryPresenter presenter;
@@ -43,6 +48,8 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
         ButterKnife.bind(this, view);
 
         // Views
+        setHasOptionsMenu(true);
+
         adapter = new ShelfAdapter(this);
 
         shelfView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -69,14 +76,50 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
     }
 
     @Override
-    public void showBook(long id) {
+    public void openBook(long id) {
         Intent intent = new Intent(getActivity(), ReadingActivity.class);
         intent.putExtra(UserData.APP_PREF_BOOK_ID, id);
         startActivity(intent);
+        getActivity().finish();
     }
 
     @Override
-    public void onBookClicked(int position) {
-        presenter.loadBook(adapter.getBook(position));
+    public void showEmpty() {
+        Toast.makeText(getContext(), R.string.error_find_books, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onShelfClicked(int position) {
+        presenter.onOpenBook(adapter.getBook(position));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.library, menu);
+
+        SearchView searchView = (SearchView)menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_scan:
+                presenter.findBooks();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

@@ -37,15 +37,24 @@ public class BookDao {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Long> add(Book book) {
-        return Observable.just(db.insert(Book.TABLE, book.getContentValues()));
+    public void add(Book book) {
+        db.insert(Book.TABLE, book.getContentValues());
     }
 
-    public Observable<Integer> remove(Long id) {
-        return Observable.just(db.delete(Book.TABLE, "id = ?", id.toString()));
+    public void addAll(List<Book> books) {
+        BriteDatabase.Transaction transaction = db.newTransaction();
+        for (Book book : books) {
+            db.insert(Book.TABLE, book.getContentValues());
+        }
+        transaction.markSuccessful();
+        transaction.close();
     }
 
-    public Observable<Integer> removeAll() {
-        return Observable.just(db.delete(Book.TABLE, ""));
+    public void remove(Long id) {
+        db.delete(Book.TABLE, "id = ?", id.toString());
+    }
+
+    public void removeAll() {
+        db.delete(Book.TABLE, "");
     }
 }

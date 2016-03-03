@@ -4,11 +4,8 @@ import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookSettings;
-import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
 import com.usayplz.englishbookreader.reading.manager.AbstractBookManager;
-import com.usayplz.englishbookreader.reading.manager.EpubManager;
-import com.usayplz.englishbookreader.reading.manager.FB2Manager;
 import com.usayplz.englishbookreader.utils.Log;
 
 import rx.Observable;
@@ -37,7 +34,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void getContent() {
         if (isViewAttached()) {
-            AbstractBookManager bookManager = getBookManager(book.getType());
+            AbstractBookManager bookManager = AbstractBookManager.getBookManager(book.getType());
             PreferencesManager preferencesManager = new PreferencesManager();
 
             getView().showLoading(R.string.progress_message);
@@ -69,16 +66,6 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
                         }
                     });
         }
-    }
-
-    public AbstractBookManager getBookManager(BookType type) {
-        switch (type) {
-            case EPUB:
-                return new EpubManager();
-            case FB2:
-                return new FB2Manager();
-        }
-        return null;
     }
 
     public void savePage(int page) {

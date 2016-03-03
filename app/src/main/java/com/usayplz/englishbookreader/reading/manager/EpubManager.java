@@ -1,8 +1,11 @@
 package com.usayplz.englishbookreader.reading.manager;
 
+import android.text.TextUtils;
+
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.utils.FileUtils;
+import com.usayplz.englishbookreader.utils.Strings;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,28 +19,38 @@ import rx.Observable;
  * u.sayplz@gmail.com
  */
 public class EpubManager extends AbstractBookManager {
-    private static final String BOOK_TEMPLATE = "html/template.html";
-
     @Override
-    public Observable<Book> getBookInfo(String filePath) {
-        return Observable.defer(() -> {
-            Book book = new Book();
-            book.setType(BookType.EPUB);
-            book.setChapter(1);
-            book.setPage(0);
-            book.setFile(filePath);
+    public Book getBookInfo(String filePath, String filesPath, String default_authors, String default_title) {
+        File file = new File(filePath);
+        File dir = FileUtils.concatToFile(filesPath, file.getName() + file.length());
+        Book book = new Book();
+        book.setType(BookType.EPUB);
+        book.setChapter(1);
+        book.setPage(0);
+        book.setFile(filePath);
+        book.setDir(dir.getPath());
 
-            try {
-                nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(filePath));
-                book.setAuthor(epubBook.getMetadata().getAuthors().toString());
-                book.setTitle(epubBook.getTitle());
-                book.setMaxChapter(epubBook.getContents().size() - 1);
-            } catch (IOException e) {
-                return Observable.error(e);
+        try {
+            nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(filePath));
+            book.setMaxChapter(epubBook.getContents().size() - 1);
+
+            String authors = TextUtils.join(", ", epubBook.getMetadata().getAuthors());
+            if (Strings.isEmpty(authors)) {
+                authors = default_authors;
             }
+            book.setAuthor(authors);
 
-            return Observable.just(book);
-        });
+            String title = epubBook.getTitle();
+            if (Strings.isEmpty(title)) {
+                title = default_title;
+            }
+            book.setTitle(title);
+
+        } catch (IOException ignored) {
+            return null;
+        }
+
+        return book;
     }
 
     @Override
