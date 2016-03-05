@@ -5,6 +5,7 @@ import android.content.Context;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import com.usayplz.englishbookreader.model.Book;
+import com.usayplz.englishbookreader.utils.Log;
 
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class BookDao {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Book> get(int id) {
-        return db.createQuery(Book.TABLE, "select * from " + Book.TABLE)
+    public Observable<Book> get(Integer id) {
+        return db.createQuery(Book.TABLE, "select * from " + Book.TABLE, Book.COL_ID + " = ?", id.toString())
                 .mapToOne(Book.MAPPER)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -51,10 +52,14 @@ public class BookDao {
     }
 
     public void remove(Long id) {
-        db.delete(Book.TABLE, "id = ?", id.toString());
+        db.delete(Book.TABLE, Book.COL_ID + " = ?", id.toString());
     }
 
     public void removeAll() {
         db.delete(Book.TABLE, "");
+    }
+
+    public void update(Book book) {
+        db.update(Book.TABLE, book.getContentValues(), Book.COL_ID + " = ?", String.valueOf(book.getId()));
     }
 }

@@ -2,6 +2,7 @@ package com.usayplz.englishbookreader.reading;
 
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
+import com.usayplz.englishbookreader.db.BookDao;
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookSettings;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
@@ -33,9 +34,13 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void getContent() {
-        if (isViewAttached()) {
-            AbstractBookManager bookManager = AbstractBookManager.getBookManager(book.getType());
+        if (getView() != null) {
             PreferencesManager preferencesManager = new PreferencesManager();
+            AbstractBookManager bookManager = AbstractBookManager.getBookManager(book.getType());
+            if (bookManager == null) {
+                getView().showError(R.string.error_open_book);
+                return;
+            }
 
             getView().showLoading(R.string.progress_message);
             isLoading = true;
@@ -70,11 +75,14 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void savePage(int page) {
         book.setPage(page);
-        // TODO add save to db (update(book))
+
+        if (getView() != null) {
+            new BookDao(getView().getContext()).update(book);
+        }
     }
 
     public void nextPage() {
-        if (isLoading || !isViewAttached()) return;
+        if (isLoading || getView() == null) return;
 
         if (page >= pageCount) {
             if (book.getChapter() < book.getMaxChapter()) {
@@ -90,7 +98,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void previousPage() {
-        if (isLoading || !isViewAttached()) return;
+        if (isLoading || getView() == null) return;
 
         if (page == 0) {
             if (book.getChapter() > 1) {
@@ -114,7 +122,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
             savePage(this.page);
         }
 
-        if (isViewAttached()) {
+        if (getView() != null) {
             getView().hideLoading();
         }
     }
