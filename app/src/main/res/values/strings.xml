@@ -7,7 +7,6 @@
     <string name="error_limit_margin">Margin must be between 10 and 100</string>
     <string name="error_load_books">Could not load books</string>
     <string name="error_find_books">Could not find books</string>
-    <string name="error_nobooks">Could not find books!</string>
 
     <!-- Menu -->
     <string name="settings">Settings</string>

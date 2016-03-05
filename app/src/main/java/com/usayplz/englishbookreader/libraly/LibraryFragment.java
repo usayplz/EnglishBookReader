@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
  */
 public class LibraryFragment extends BaseFragment implements LibraryView, ShelfAdapter.ShelfAdapterListener {
     @Bind(R.id.shelf) RecyclerView shelfView;
-    @Bind(R.id.nobooks) TextView nobooksView;
+    @Bind(R.id.error_find) TextView nobooksView;
 
     private LibraryPresenter presenter;
     private ShelfAdapter adapter;
