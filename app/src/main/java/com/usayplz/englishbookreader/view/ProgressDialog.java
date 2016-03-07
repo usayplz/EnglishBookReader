@@ -21,7 +21,6 @@ public class ProgressDialog extends AlertDialog {
 
     public ProgressDialog(Context context, String message) {
         super(context);
-
         this.context = context;
         this.message = message;
     }
@@ -32,7 +31,6 @@ public class ProgressDialog extends AlertDialog {
         this.setView(view);
         this.setCancelable(false);
         this.setTitle(null);
-
         TextView messageView = (TextView) view.findViewById(R.id.message);
         messageView.setText(message);
 

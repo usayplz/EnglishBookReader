@@ -10,27 +10,16 @@ import com.usayplz.englishbookreader.BookApplication;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.model.Settings;
 
-import rx.Observable;
-
 /**
  * Created by Sergei Kurikalov on 08/02/16.
  * u.sayplz@gmail.com
  */
 public class PreferencesManager {
 
-    public Observable<Settings> getPreferences(Context context) {
-        return Observable.defer(() -> {
-            try {
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(BookApplication.get(context));
-                Settings settings = load(context.getResources(), pref);
-                return Observable.just(settings);
-            } catch (Exception e) {
-                return Observable.error(e);
-            }
-        });
-    }
+    public Settings getPreferences(Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(BookApplication.get(context));
+        Resources res = context.getResources();
 
-    private Settings load(Resources res, SharedPreferences pref) {
         Settings settings = new Settings();
         settings.setMarginTop(Integer.valueOf(pref.getString(res.getString(R.string.pref_margin_top), res.getString(R.string.pref_margin_default))));
         settings.setMarginBottom(Integer.valueOf(pref.getString(res.getString(R.string.pref_margin_bottom), res.getString(R.string.pref_margin_default))));

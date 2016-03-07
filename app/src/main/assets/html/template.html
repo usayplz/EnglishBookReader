@@ -13,7 +13,7 @@
         body {
             padding: 0px;
             margin: 0px;
-            background-color: ${background-color};
+            background-color: #ffffff;
         }
 
         p, div {
@@ -26,43 +26,59 @@
         }
 
         #content {
-            font-family: '${font-family}';
-            font-size: ${font-size}px;
-            color: ${background-color};
             text-align: justify;
-            line-height: 170%;
             padding: 0px;
             margin: 0px;
+        }
+
+        #fill_screen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            right:0;
+            bottom:0;
+            background-color: #ffffff;
         }
     </style>
 </head>
 
 <body>
-    <div id="content">${content}</div>
+    <div id="fill_screen"></div>
+    <div id="content">${content}<span id="end_marker"></span></div>
 
     <script>
-        function init() {
+        function init(font_family, font_size, font_color, background_color, page) {
+            $('#content').css('font-family', "'" + font_family + "'");
+            $('#content').css('font-size', font_size + 'px');
+            $('#content').css('color', font_color);
+            $('body').css('background-color', background_color);
+
             var d = document.getElementsByTagName('body')[0];
 
             var columnGap = 2;
             var ourHeight = window.innerHeight;
             var ourWidth = window.innerWidth;
             var fullHeight = d.offsetHeight;
-            var pageCount = Math.floor(fullHeight / (ourHeight + columnGap));
+            var pageCount = Math.floor(fullHeight / ourHeight) + 1;
             var newWidth = pageCount * ourWidth;
             d.style.height = ourHeight + 'px';
             d.style.width = newWidth + 'px';
             d.style.webkitColumnGap = columnGap + 'px';
             d.style.webkitColumnCount = pageCount;
 
-            var page = ${page};
+            var columnCount = Math.ceil($('#end_marker').offset().left / (ourWidth + columnGap));
+
             if (page == -1) {
-                page = pageCount;
+                page = columnCount;
             }
 
-            $("body").scrollLeft(window.innerWidth * page);
-            $('#content').css('color', '${font-color}');
-            android.getPageCount(pageCount);
+            if (page != -1000) {
+                $("body").scrollLeft(window.innerWidth * page);
+                $('#fill_screen').hide();
+            }
+            android.getPageCount(columnCount);
         }
 
         function setPage(page) {

@@ -4,14 +4,14 @@ import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.db.BookDao;
 import com.usayplz.englishbookreader.model.Book;
-import com.usayplz.englishbookreader.model.BookSettings;
+import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
+import com.usayplz.englishbookreader.preference.UserData;
 import com.usayplz.englishbookreader.reading.manager.AbstractBookManager;
-import com.usayplz.englishbookreader.utils.Log;
+import com.usayplz.englishbookreader.utils.FileUtils;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import java.io.File;
+import java.util.List;
 
 /**
  * Created by Sergei Kurikalov on 03/02/16.
@@ -19,63 +19,76 @@ import rx.schedulers.Schedulers;
  */
 
 public class ReadingPresenter extends BasePresenter<ReadingView> {
+    private static final String BOOK_TEMPLATE = "html/template.html";
+    private static final int PAGE_COUNTING_FLAG = -1000;
 
+    private Settings settings;
+    private AbstractBookManager bookManager;
     private Book book;
-    private int page;
     private int pageCount;
     private int maxPageCount;
     private boolean isLoading = false;
+    private boolean isCounting = false;
+    private int file_index;
+    private List<File> files;
 
-    public ReadingPresenter(Book book) {
-        this.book = book;
-        this.page = book.getPage();
+    public ReadingPresenter() {
         this.pageCount = 0;
         this.maxPageCount = 0;
     }
 
     public void getContent() {
         if (getView() != null) {
-            PreferencesManager preferencesManager = new PreferencesManager();
-            AbstractBookManager bookManager = AbstractBookManager.getBookManager(book.getType());
-            if (bookManager == null) {
-                getView().showError(R.string.error_open_book);
-                return;
+            this.isLoading = true;
+
+            // TODO check objects
+            if (book == null) {
+                long id = new UserData(getView().getContext()).getBookId();
+                book = new BookDao(getView().getContext()).get(id);
+                bookManager = AbstractBookManager.getBookManager(book.getType());
             }
 
-            getView().showLoading(R.string.progress_message);
-            isLoading = true;
+            if (settings == null) {
+                PreferencesManager preferencesManager = new PreferencesManager();
+                this.settings = preferencesManager.getPreferences(getView().getContext());
+            }
 
-            Observable.combineLatest(
-                    bookManager.getContent(book),
-                    preferencesManager.getPreferences(getView().getContext()),
-                    (content, settings) -> {
-                        page = book.getPage();
-
-                        BookSettings bookSettings = new BookSettings();
-                        bookSettings.setBook(book);
-                        bookSettings.setContent(content);
-                        bookSettings.setSettings(settings);
-                        return bookSettings;
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(bookSettings -> {
-                        if (isViewAttached()) {
-                            getView().showContent(bookSettings);
-                        }
-                    }, throwable -> {
-                        Log.d(throwable.getMessage());
-                        if (isViewAttached()) {
-                            getView().hideLoading();
-                            getView().showError(R.string.error_open_book);
-                        }
-                    });
+            if (book.getMaxPageCount() == 0) {
+                getView().showLoading(R.string.progress_loading_book);
+                String template = FileUtils.loadAsset(getView().getContext(), BOOK_TEMPLATE);
+                this.files = bookManager.process(book, template);
+                this.file_index = files.size();
+                this.isCounting = true;
+                nextFileCounting();
+            } else {
+                File chapterFile = bookManager.getChapterFile(book.getDir(), book.getChapter());
+                getView().showContent(chapterFile, settings, book.getPage());
+            }
         }
     }
 
-    public void savePage(int page) {
-        book.setPage(page);
+    private void nextFileCounting() {
+        file_index--;
+        if (file_index < 0) {
+            isCounting = false;
+            book.setMaxPageCount(maxPageCount);
+            saveBook();
+            getContent();
+            return;
+        }
 
+        if (getView() != null) {
+            getView().showContent(files.get(file_index), settings, PAGE_COUNTING_FLAG);
+        }
+    }
+
+    @Override
+    public void detachView() {
+        saveBook();
+        super.detachView();
+    }
+
+    public void saveBook() {
         if (getView() != null) {
             new BookDao(getView().getContext()).update(book);
         }
@@ -84,42 +97,45 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     public void nextPage() {
         if (isLoading || getView() == null) return;
 
-        if (page >= pageCount) {
+        if (book.getPage() >= pageCount) {
             if (book.getChapter() < book.getMaxChapter()) {
                 book.setChapter(book.getChapter() + 1);
                 book.setPage(0);
                 getContent();
             }
         } else {
-            page++;
-            getView().setPage(page);
-            savePage(page);
+            book.setPage(book.getPage() + 1);
+            getView().setPage(book.getPage());
         }
     }
 
     public void previousPage() {
         if (isLoading || getView() == null) return;
 
-        if (page == 0) {
+        if (book.getPage() == 0) {
             if (book.getChapter() > 1) {
                 book.setChapter(book.getChapter() - 1);
                 book.setPage(-1);
                 getContent();
             }
         } else {
-            page--;
-            getView().setPage(page);
-            savePage(page);
+            book.setPage(book.getPage() - 1);
+            getView().setPage(book.getPage());
         }
     }
 
     public void setPageCount(int pageCount) {
-        isLoading = false;
+        if (isCounting) {
+            this.maxPageCount += pageCount;
+            nextFileCounting();
+            return;
+        }
+
+        this.isLoading = false;
         this.pageCount = pageCount;
-        this.maxPageCount = maxPageCount + pageCount;
-        if (this.page < 0) {
-            this.page = pageCount;
-            savePage(this.page);
+
+        if (book.getPage() < 0) {
+            book.setPage(pageCount);
         }
 
         if (getView() != null) {

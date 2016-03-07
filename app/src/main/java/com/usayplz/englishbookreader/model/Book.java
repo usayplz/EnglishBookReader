@@ -26,6 +26,7 @@ public class Book implements Serializable {
     public static final String COL_PAGE = "page";
     public static final String COL_CHAPTER = "chapter";
     public static final String COL_MAXCHAPTER = "max_chapter";
+    public static final String COL_MAXPAGECOUNT = "max_page_count";
 
     public static final String CREATE_TABLE = ""
             + "CREATE TABLE " + TABLE + "("
@@ -38,7 +39,8 @@ public class Book implements Serializable {
             + COL_COVERIMAGE + " TEXT,"
             + COL_PAGE + " INTEGER,"
             + COL_CHAPTER + " INTEGER,"
-            + COL_MAXCHAPTER + " INTEGER"
+            + COL_MAXCHAPTER + " INTEGER,"
+            + COL_MAXPAGECOUNT + " INTEGER"
             + ")";
 
     private long id;
@@ -52,6 +54,12 @@ public class Book implements Serializable {
     private int page;
     private int chapter;
     private int maxChapter;
+    private int maxPageCount;
+
+
+    public Book() {
+        this.maxPageCount = 0;
+    }
 
     public long getId() {
         return id;
@@ -143,10 +151,19 @@ public class Book implements Serializable {
         this.maxChapter = maxChapter;
     }
 
+    public int getMaxPageCount() {
+        return maxPageCount;
+    }
+
+    public void setMaxPageCount(int maxPageCount) {
+        this.maxPageCount = maxPageCount;
+    }
+
     public static final Func1<Cursor, Book> MAPPER = cursor -> {
         Book book = new Book();
         book.id = Db.getLong(cursor, COL_ID);
         book.typeCode = Db.getInt(cursor, COL_TYPE);
+        book.type = BookType.byCode(book.typeCode);
         book.file = Db.getString(cursor, COL_FILE);
         book.dir = Db.getString(cursor, COL_DIR);
         book.title = Db.getString(cursor, COL_TITLE);
@@ -155,12 +172,13 @@ public class Book implements Serializable {
         book.page = Db.getInt(cursor, COL_PAGE);
         book.chapter = Db.getInt(cursor, COL_CHAPTER);
         book.maxChapter = Db.getInt(cursor, COL_MAXCHAPTER);
+        book.maxPageCount = Db.getInt(cursor, COL_MAXPAGECOUNT);
         return book;
     };
 
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
-        // values.put(COL_ID, id);
+//        values.put(COL_ID, id);
         values.put(COL_TYPE, typeCode);
         values.put(COL_FILE, file);
         values.put(COL_DIR, dir);
@@ -170,6 +188,7 @@ public class Book implements Serializable {
         values.put(COL_PAGE, page);
         values.put(COL_CHAPTER, chapter);
         values.put(COL_MAXCHAPTER, maxChapter);
+        values.put(COL_MAXPAGECOUNT, maxPageCount);
 
         return values;
     }

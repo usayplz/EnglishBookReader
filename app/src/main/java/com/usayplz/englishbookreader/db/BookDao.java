@@ -1,11 +1,11 @@
 package com.usayplz.englishbookreader.db;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import com.usayplz.englishbookreader.model.Book;
-import com.usayplz.englishbookreader.utils.Log;
 
 import java.util.List;
 
@@ -31,11 +31,10 @@ public class BookDao {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Book> get(Integer id) {
-        return db.createQuery(Book.TABLE, "select * from " + Book.TABLE, Book.COL_ID + " = ?", id.toString())
-                .mapToOne(Book.MAPPER)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+    public Book get(Long id) {
+        Cursor cursor = db.query("select * from " + Book.TABLE+" where " + Book.COL_ID + " = ?", id.toString());
+        if (!cursor.moveToFirst()) return null;
+        return Book.MAPPER.call(cursor);
     }
 
     public void add(Book book) {

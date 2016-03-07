@@ -15,14 +15,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.usayplz.englishbookreader.model.BookSettings;
+import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.utils.FileUtils;
 import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.utils.Strings;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Created by Sergei Kurikalov on 03/02/16.
@@ -30,12 +28,13 @@ import java.io.IOException;
  */
 public class EBookView extends WebView {
     private static final float SCROLL_THRESHOLD = 0.1f;
-    private static final String BOOK_TEMPLATE = "html/template.html";
 
     private float posX;
     private float posY;
     private boolean isSwiping;
     private EBookListener listener;
+    private Settings settings;
+    private int page;
 
     public EBookView(Context context) {
         super(context);
@@ -55,25 +54,26 @@ public class EBookView extends WebView {
     @SuppressLint("SetJavaScriptEnabled")
     private void init() {
         // settings
-        WebSettings settings = this.getSettings();
+        WebSettings webSettings = this.getSettings();
 
         this.addJavascriptInterface(this, "android");
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
+        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
-        settings.setDefaultTextEncodingName("utf-8");
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setUseWideViewPort(false);
-        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webSettings.setDefaultTextEncodingName("utf-8");
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setUseWideViewPort(false);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
 
-        settings.setBuiltInZoomControls(false);
-        settings.setDisplayZoomControls(false);
-        settings.setSupportZoom(false);
+        webSettings.setBuiltInZoomControls(false);
+        webSettings.setDisplayZoomControls(false);
+        webSettings.setSupportZoom(false);
 
         // speed?
-        settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         this.requestFocus(View.FOCUS_DOWN);
 
         // disable long tap
@@ -91,8 +91,14 @@ public class EBookView extends WebView {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
 
-                loadUrl("javascript:" + FileUtils.loadAsset(getContext(), "js/jquery.min.js"));
-                loadUrl("javascript: init();");
+                if (settings != null) {
+                    loadUrl("javascript:" + FileUtils.loadAsset(getContext(), "html/jquery.min.js"));
+                    loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s');",
+                            settings.getFontFamily(),
+                            settings.getFontSize(),
+                            Strings.colorToRGB(settings.getFontColor()),
+                            Strings.colorToRGB(settings.getBackgroundColor()), page));
+                }
             }
         });
 
@@ -100,55 +106,16 @@ public class EBookView extends WebView {
         this.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onConsoleMessage(@NonNull ConsoleMessage consoleMessage) {
-                Log.d(consoleMessage.message());
+                Log.d("console.log('" + consoleMessage.message() + "')");
                 return super.onConsoleMessage(consoleMessage);
             }
         });
     }
 
-    public void loadContent(BookSettings bookSettings) {
-        this.loadUrl(Uri.fromFile(modifyContent(bookSettings)).toString());
-    }
-
-    private File modifyContent(BookSettings bookSettings) {
-        String template = FileUtils.loadAsset(getContext(), BOOK_TEMPLATE);
-        if (Strings.isEmpty(template)) {
-            Log.d("Cannot load template");
-            return null;
-        }
-
-        // main
-        String content = bookSettings.getContent();
-
-        // body
-        int start = content.indexOf("<body") + 6;
-        for (int i = start; i <= content.length(); i++) {
-            if (">".equals(content.substring(i - 1, i))) {
-                start = i;
-                break;
-            }
-        }
-        content = content.substring(start, content.indexOf("</body>"));
-
-        // replace
-        template = template.replace("${content}", content);
-        template = template.replace("${page}", String.valueOf(bookSettings.getBook().getPage()));
-        template = template.replace("${font-family}", bookSettings.getSettings().getFontFamily());
-        template = template.replace("${font-size}", bookSettings.getSettings().getFontSize().toString());
-        template = template.replace("${font-color}", Strings.colorToRGB(bookSettings.getSettings().getFontColor()));
-        template = template.replace("${background-color}", Strings.colorToRGB(bookSettings.getSettings().getBackgroundColor()));
-
-        File file = FileUtils.concatToFile(bookSettings.getBook().getDir(), "template.html");
-        try {
-            FileWriter writer = new FileWriter(file);
-            writer.write(template);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return file;
+    public void loadContent(File chapterFile, Settings settings, int page) {
+        this.page = page;
+        this.settings = settings;
+        this.loadUrl(Uri.fromFile(chapterFile).toString());
     }
 
     @Override

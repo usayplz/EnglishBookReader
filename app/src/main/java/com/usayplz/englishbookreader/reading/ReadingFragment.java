@@ -15,12 +15,8 @@ import android.widget.Toast;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
-import com.usayplz.englishbookreader.model.Book;
-import com.usayplz.englishbookreader.model.BookSettings;
-import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
-import com.usayplz.englishbookreader.utils.FileUtils;
 import com.usayplz.englishbookreader.view.EBookView;
 
 import java.io.File;
@@ -41,6 +37,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     @Bind(R.id.bottom) ImageView bottomView;
     @Bind(R.id.main) RelativeLayout mainView;
 
+    private boolean bugFixLessV19 = true; // unknown bug in WebView less than ver. 19
     private ReadingPresenter presenter;
 
     @Override
@@ -53,22 +50,6 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        // TODO book from savedInstanceState
-                Book book = new Book();
-//        String filePath = "/mnt/sdcard/Download/johnny.epub";
-//        String filePath = "/storage/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
-        String filePath = "/mnt/sdcard/Download/Adamov_G_Izgnanie_VladiykiI.epub";
-        File fileBook = new File(filePath);
-        File dirBook = FileUtils.concatToFile(getContext().getFilesDir().getPath(), fileBook.getName() + fileBook.length());
-        book.setType(BookType.EPUB);
-        book.setFile(fileBook.getPath());
-        // TODO Define OPS dir
-        book.setDir(dirBook.getPath());// + File.separator + "OPS";
-        book.setTitle("Johnny Mnemonic");
-        book.setAuthor("Unknown");
-        book.setChapter(1);
-        book.setMaxChapter(58);
-
         // Views
         bookView.setListener(this);
         leftView.setOnClickListener(v -> onPrevious());
@@ -78,14 +59,13 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         bottomView.setOnClickListener(v -> getActivity().openContextMenu(v));
 
         // presenter
-        presenter = new ReadingPresenter(book);
+        presenter = new ReadingPresenter();
         presenter.attachView(this);
         presenter.getContent();
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo
-            menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle(null);
         for (ReadingMenuItem item : ReadingMenuItem.values()) {
             menu.add(item.group, item.id, item.order, item.name);
@@ -117,9 +97,9 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     }
 
     @Override
-    public void showContent(BookSettings bookSettings) {
-        applySettings(bookSettings.getSettings());
-        bookView.loadContent(bookSettings);
+    public void showContent(File chapterFile, Settings settings, int page) {
+        applySettings(settings);
+        getActivity().runOnUiThread(() -> bookView.loadContent(chapterFile, settings, page));
     }
 
     private void applySettings(Settings settings) {
@@ -161,7 +141,12 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
 
     @Override
     public void onGetPageCount(int pagecount) {
-        presenter.setPageCount(pagecount);
+        if (bugFixLessV19) {
+            presenter.getContent();
+            bugFixLessV19 = false;
+        } else {
+            presenter.setPageCount(pagecount);
+        }
     }
 
     @Override

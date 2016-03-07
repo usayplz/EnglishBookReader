@@ -21,7 +21,6 @@ public class ReadingActivity extends BaseActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ReadingFragment()).commit();
         } else {
             Intent intent = new Intent(this, LibraryActivity.class);
-            intent.putExtra(UserData.APP_PREF_BOOK_ID, bookId);
             startActivity(intent);
             finish();
         }

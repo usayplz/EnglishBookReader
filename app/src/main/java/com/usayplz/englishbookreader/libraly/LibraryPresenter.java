@@ -90,6 +90,7 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
                         if (bookManager != null) {
                             book = bookManager.getBookInfo(book.getFile(), filesDir, default_authors, default_title);
                         }
+
                         return book;
                     })
                     .filter(book -> !Strings.isEmpty(book.getTitle()))

@@ -2,7 +2,8 @@ package com.usayplz.englishbookreader.reading.manager;
 
 import com.usayplz.englishbookreader.model.Book;
 
-import rx.Observable;
+import java.io.File;
+import java.util.List;
 
 /**
  * Created by Sergei Kurikalov on 08/02/16.
@@ -16,7 +17,7 @@ public class FB2Manager extends AbstractBookManager {
     }
 
     @Override
-    public Observable<String> getContent(Book book) {
-        return Observable.just("");
+    public List<File> process(Book book, String template) {
+        return null;
     }
 }

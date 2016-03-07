@@ -10,9 +10,10 @@ import com.usayplz.englishbookreader.utils.Strings;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import nl.siegmann.epublib.epub.EpubReader;
-import rx.Observable;
 
 /**
  * Created by Sergei Kurikalov on 03/02/16.
@@ -54,21 +55,24 @@ public class EpubManager extends AbstractBookManager {
     }
 
     @Override
-    public Observable<String> getContent(Book book) {
-        return Observable.defer(() -> {
-            try {
-                File file = new File(book.getFile());
-                File dir = new File(book.getDir());
-                if (!dir.exists()) {
-                    FileUtils.unzip(file, dir);
-                }
-
-                nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(book.getFile()));
-                String content = new String(epubBook.getContents().get(book.getChapter()).getData());
-                return Observable.just(content);
-            } catch (IOException e) {
-                return Observable.error(e);
+    public List<File> process(Book book, String template) {
+        try {
+            File file = new File(book.getFile());
+            File dir = new File(book.getDir());
+            if (!dir.exists()) {
+                FileUtils.unzip(file, dir);
             }
-        });
+
+            nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(book.getFile()));
+            List<File> files = new ArrayList<>();
+            for (int chapter = 1; chapter <= book.getMaxChapter(); chapter++) {
+                String content = new String(epubBook.getContents().get(chapter).getData());
+                files.add(createContent(content, template, dir.getPath(), chapter));
+            }
+
+            return files;
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

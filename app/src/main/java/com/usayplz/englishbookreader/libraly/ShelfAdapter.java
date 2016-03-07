@@ -42,7 +42,6 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Book book = books.get(position);
-
         String pathCoverImage = book.getCoverImage();
         if (!Strings.isEmpty(pathCoverImage)) {
             try {
