@@ -26,7 +26,7 @@ public class EpubManager extends AbstractBookManager {
         File dir = FileUtils.concatToFile(filesPath, file.getName() + file.length());
         Book book = new Book();
         book.setType(BookType.EPUB);
-        book.setChapter(1);
+        book.setChapter(0);
         book.setPage(0);
         book.setFile(filePath);
         book.setDir(dir.getPath());
@@ -65,7 +65,7 @@ public class EpubManager extends AbstractBookManager {
 
             nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(book.getFile()));
             List<File> files = new ArrayList<>();
-            for (int chapter = 1; chapter <= book.getMaxChapter(); chapter++) {
+            for (int chapter = 0; chapter <= book.getMaxChapter(); chapter++) {
                 String content = new String(epubBook.getContents().get(chapter).getData());
                 files.add(createContent(content, template, dir.getPath(), chapter));
             }

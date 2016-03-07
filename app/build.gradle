@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.usayplz.englishbookreader"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -37,6 +37,7 @@ dependencies {
     // Other
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.github.AndroidDeveloperLB:MaterialPreferenceLibrary:5'
+    compile 'com.gregacucnik:editableseekbar:1.2'
 }
 
 android {

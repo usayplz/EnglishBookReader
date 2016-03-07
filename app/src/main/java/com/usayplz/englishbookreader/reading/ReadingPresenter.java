@@ -113,7 +113,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         if (isLoading || getView() == null) return;
 
         if (book.getPage() == 0) {
-            if (book.getChapter() > 1) {
+            if (book.getChapter() > 0) {
                 book.setChapter(book.getChapter() - 1);
                 book.setPage(-1);
                 getContent();
