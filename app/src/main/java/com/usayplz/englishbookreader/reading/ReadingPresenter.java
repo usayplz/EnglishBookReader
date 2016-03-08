@@ -3,7 +3,9 @@ package com.usayplz.englishbookreader.reading;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.db.BookDao;
+import com.usayplz.englishbookreader.db.ChapterDao;
 import com.usayplz.englishbookreader.model.Book;
+import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
 import com.usayplz.englishbookreader.preference.UserData;
@@ -11,6 +13,7 @@ import com.usayplz.englishbookreader.reading.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.utils.FileUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +34,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     private boolean isCounting = false;
     private int file_index;
     private List<File> files;
+    private List<Chapter> chapters;
 
     public ReadingPresenter() {
         this.pageCount = 0;
@@ -39,9 +43,9 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void getContent() {
         if (getView() != null) {
-            this.isLoading = true;
+            this.isLoading = true; // false in setPageCount
 
-            // TODO check objects
+            // Init objects
             if (book == null) {
                 long id = new UserData(getView().getContext()).getBookId();
                 book = new BookDao(getView().getContext()).get(id);
@@ -59,10 +63,22 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
                 this.files = bookManager.process(book, template);
                 this.file_index = files.size();
                 this.isCounting = true;
+                this.chapters = new ArrayList<>();
                 nextFileCounting();
             } else {
-                File chapterFile = bookManager.getChapterFile(book.getDir(), book.getChapter());
-                getView().showContent(chapterFile, settings, book.getPage());
+                if (chapters == null) {
+                    ChapterDao chapterDao = new ChapterDao(getView().getContext());
+                    chapterDao.getByBook(book.getId())
+                            .subscribe(chapters -> {
+                                this.chapters = chapters;
+
+                                File chapterFile = bookManager.getChapterFile(book.getDir(), book.getChapter());
+                                getView().showContent(chapterFile, settings, book.getPage());
+                            });
+                } else {
+                    File chapterFile = bookManager.getChapterFile(book.getDir(), book.getChapter());
+                    getView().showContent(chapterFile, settings, book.getPage());
+                }
             }
         }
     }
@@ -73,6 +89,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
             isCounting = false;
             book.setMaxPageCount(maxPageCount);
             saveBook();
+            saveChapter();
             getContent();
             return;
         }
@@ -91,6 +108,14 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     public void saveBook() {
         if (getView() != null) {
             new BookDao(getView().getContext()).update(book);
+        }
+    }
+
+    public void saveChapter() {
+        if (getView() != null) {
+            ChapterDao chapterDao = new ChapterDao(getView().getContext());
+            chapterDao.removeAll();
+            chapterDao.addAll(chapters);
         }
     }
 
@@ -126,6 +151,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void setPageCount(int pageCount) {
         if (isCounting) {
+            addChapter(pageCount);
             this.maxPageCount += pageCount;
             nextFileCounting();
             return;
@@ -141,5 +167,14 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         if (getView() != null) {
             getView().hideLoading();
         }
+    }
+
+    private void addChapter(int pageCount) {
+        Chapter chapter = new Chapter();
+        chapter.setBookId(book.getId());
+        chapter.setChapter(file_index);
+        chapter.setPageCount(pageCount);
+
+        chapters.add(chapter);
     }
 }

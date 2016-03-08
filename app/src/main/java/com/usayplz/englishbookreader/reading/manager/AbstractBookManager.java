@@ -35,7 +35,8 @@ public abstract class AbstractBookManager {
 
     public File createContent(String content, String template, String dir, int chapter) {
         File file = getChapterFile(dir, chapter);
-        if (file.exists()) return file;
+//  TODO uncomment
+//      if (file.exists()) return file;
 
         // body
         int start = content.indexOf("<body") + 6;

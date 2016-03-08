@@ -56,9 +56,42 @@ public class Book implements Serializable {
     private int maxChapter;
     private int maxPageCount;
 
-
     public Book() {
         this.maxPageCount = 0;
+    }
+
+    public static final Func1<Cursor, Book> MAPPER = cursor -> {
+        Book book = new Book();
+        book.id = Db.getLong(cursor, COL_ID);
+        book.typeCode = Db.getInt(cursor, COL_TYPE);
+        book.type = BookType.byCode(book.typeCode);
+        book.file = Db.getString(cursor, COL_FILE);
+        book.dir = Db.getString(cursor, COL_DIR);
+        book.title = Db.getString(cursor, COL_TITLE);
+        book.author = Db.getString(cursor, COL_AUTHOR);
+        book.coverImage = Db.getString(cursor, COL_COVERIMAGE);
+        book.page = Db.getInt(cursor, COL_PAGE);
+        book.chapter = Db.getInt(cursor, COL_CHAPTER);
+        book.maxChapter = Db.getInt(cursor, COL_MAXCHAPTER);
+        book.maxPageCount = Db.getInt(cursor, COL_MAXPAGECOUNT);
+        return book;
+    };
+
+    public ContentValues getContentValues() {
+        ContentValues values = new ContentValues();
+//        values.put(COL_ID, id);
+        values.put(COL_TYPE, typeCode);
+        values.put(COL_FILE, file);
+        values.put(COL_DIR, dir);
+        values.put(COL_TITLE, title);
+        values.put(COL_AUTHOR, author);
+        values.put(COL_COVERIMAGE, coverImage);
+        values.put(COL_PAGE, page);
+        values.put(COL_CHAPTER, chapter);
+        values.put(COL_MAXCHAPTER, maxChapter);
+        values.put(COL_MAXPAGECOUNT, maxPageCount);
+
+        return values;
     }
 
     public long getId() {
@@ -157,39 +190,5 @@ public class Book implements Serializable {
 
     public void setMaxPageCount(int maxPageCount) {
         this.maxPageCount = maxPageCount;
-    }
-
-    public static final Func1<Cursor, Book> MAPPER = cursor -> {
-        Book book = new Book();
-        book.id = Db.getLong(cursor, COL_ID);
-        book.typeCode = Db.getInt(cursor, COL_TYPE);
-        book.type = BookType.byCode(book.typeCode);
-        book.file = Db.getString(cursor, COL_FILE);
-        book.dir = Db.getString(cursor, COL_DIR);
-        book.title = Db.getString(cursor, COL_TITLE);
-        book.author = Db.getString(cursor, COL_AUTHOR);
-        book.coverImage = Db.getString(cursor, COL_COVERIMAGE);
-        book.page = Db.getInt(cursor, COL_PAGE);
-        book.chapter = Db.getInt(cursor, COL_CHAPTER);
-        book.maxChapter = Db.getInt(cursor, COL_MAXCHAPTER);
-        book.maxPageCount = Db.getInt(cursor, COL_MAXPAGECOUNT);
-        return book;
-    };
-
-    public ContentValues getContentValues() {
-        ContentValues values = new ContentValues();
-//        values.put(COL_ID, id);
-        values.put(COL_TYPE, typeCode);
-        values.put(COL_FILE, file);
-        values.put(COL_DIR, dir);
-        values.put(COL_TITLE, title);
-        values.put(COL_AUTHOR, author);
-        values.put(COL_COVERIMAGE, coverImage);
-        values.put(COL_PAGE, page);
-        values.put(COL_CHAPTER, chapter);
-        values.put(COL_MAXCHAPTER, maxChapter);
-        values.put(COL_MAXPAGECOUNT, maxPageCount);
-
-        return values;
     }
 }
