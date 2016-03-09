@@ -20,9 +20,7 @@
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         app:esbEditTextWidth="70dp"
-        app:esbMax="1000"
-        app:esbMin="1"
-        app:esbValue="100"/>
+        app:esbMin="0"/>
 
     <View
         android:layout_width="match_parent"

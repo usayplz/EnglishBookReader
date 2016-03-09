@@ -24,9 +24,7 @@ public class Book implements Serializable {
     public static final String COL_AUTHOR = "author";
     public static final String COL_COVERIMAGE = "cover_image";
     public static final String COL_PAGE = "page";
-    public static final String COL_CHAPTER = "chapter";
-    public static final String COL_MAXCHAPTER = "max_chapter";
-    public static final String COL_MAXPAGECOUNT = "max_page_count";
+    public static final String COL_LASTPAGE = "last_page";
 
     public static final String CREATE_TABLE = ""
             + "CREATE TABLE " + TABLE + "("
@@ -38,9 +36,7 @@ public class Book implements Serializable {
             + COL_AUTHOR + " TEXT,"
             + COL_COVERIMAGE + " TEXT,"
             + COL_PAGE + " INTEGER,"
-            + COL_CHAPTER + " INTEGER,"
-            + COL_MAXCHAPTER + " INTEGER,"
-            + COL_MAXPAGECOUNT + " INTEGER"
+            + COL_LASTPAGE + " INTEGER"
             + ")";
 
     private long id;
@@ -52,12 +48,9 @@ public class Book implements Serializable {
     private String author;
     private String coverImage;
     private int page;
-    private int chapter;
-    private int maxChapter;
-    private int maxPageCount;
+    private int lastPage;
 
     public Book() {
-        this.maxPageCount = 0;
     }
 
     public static final Func1<Cursor, Book> MAPPER = cursor -> {
@@ -71,9 +64,7 @@ public class Book implements Serializable {
         book.author = Db.getString(cursor, COL_AUTHOR);
         book.coverImage = Db.getString(cursor, COL_COVERIMAGE);
         book.page = Db.getInt(cursor, COL_PAGE);
-        book.chapter = Db.getInt(cursor, COL_CHAPTER);
-        book.maxChapter = Db.getInt(cursor, COL_MAXCHAPTER);
-        book.maxPageCount = Db.getInt(cursor, COL_MAXPAGECOUNT);
+        book.lastPage = Db.getInt(cursor, COL_LASTPAGE);
         return book;
     };
 
@@ -87,9 +78,7 @@ public class Book implements Serializable {
         values.put(COL_AUTHOR, author);
         values.put(COL_COVERIMAGE, coverImage);
         values.put(COL_PAGE, page);
-        values.put(COL_CHAPTER, chapter);
-        values.put(COL_MAXCHAPTER, maxChapter);
-        values.put(COL_MAXPAGECOUNT, maxPageCount);
+        values.put(COL_LASTPAGE, lastPage);
 
         return values;
     }
@@ -168,27 +157,11 @@ public class Book implements Serializable {
         this.page = page;
     }
 
-    public int getChapter() {
-        return chapter;
+    public int getLastPage() {
+        return lastPage;
     }
 
-    public void setChapter(int chapter) {
-        this.chapter = chapter;
-    }
-
-    public int getMaxChapter() {
-        return maxChapter;
-    }
-
-    public void setMaxChapter(int maxChapter) {
-        this.maxChapter = maxChapter;
-    }
-
-    public int getMaxPageCount() {
-        return maxPageCount;
-    }
-
-    public void setMaxPageCount(int maxPageCount) {
-        this.maxPageCount = maxPageCount;
+    public void setLastPage(int lastPage) {
+        this.lastPage = lastPage;
     }
 }

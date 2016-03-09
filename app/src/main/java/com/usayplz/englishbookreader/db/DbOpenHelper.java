@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.usayplz.englishbookreader.model.Book;
-import com.usayplz.englishbookreader.model.Chapter;
 
 /**
  * Created by Sergei Kurikalov on 05/12/15.
@@ -22,7 +21,6 @@ public final class DbOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(Book.CREATE_TABLE);
-        db.execSQL(Chapter.CREATE_TABLE);
     }
 
     @Override

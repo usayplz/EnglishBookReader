@@ -10,7 +10,7 @@ import java.io.File;
  * u.sayplz@gmail.com
  */
 public interface ReadingView extends BaseView {
-    void showContent(File chapterFile, Settings settings, int page, int maxPage);
+    void showContent(File content, Settings settings, int page);
     void setPage(int page);
     void showMenu(int page, int maxPageCount);
 }

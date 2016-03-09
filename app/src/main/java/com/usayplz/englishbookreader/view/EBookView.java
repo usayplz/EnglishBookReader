@@ -112,10 +112,10 @@ public class EBookView extends WebView {
         });
     }
 
-    public void loadContent(File chapterFile, Settings settings, int page) {
+    public void loadContent(File content, Settings settings, int page) {
         this.page = page;
         this.settings = settings;
-        this.loadUrl(Uri.fromFile(chapterFile).toString());
+        this.loadUrl(Uri.fromFile(content).toString());
     }
 
     @Override

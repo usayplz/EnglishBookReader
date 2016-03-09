@@ -7,21 +7,18 @@ import com.usayplz.englishbookreader.utils.FileUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by Sergei Kurikalov on 06/02/16.
  * u.sayplz@gmail.com
  */
 public abstract class AbstractBookManager {
-    private static final String CHAPTER_FILE_NAME = "chapter_%s.html";
+    private static final String BOOK_FILE_NAME = "book.html";
 
-    public abstract Book getBookInfo(String filePath, String filesPath, String default_authors, String default_title);
-    public abstract List<File> process(Book book, String template);
-
-    public File getChapterFile(String dir, int chapter) {
-        return FileUtils.concatToFile(dir, String.format(CHAPTER_FILE_NAME, chapter));
-    }
+    public abstract Book getBookInfo(String filePath, String filesPath);
+    public abstract Observable<File> getContent(Book book, String template);
 
     public static AbstractBookManager getBookManager(BookType type) {
         switch (type) {
@@ -33,11 +30,11 @@ public abstract class AbstractBookManager {
         return null;
     }
 
-    public File createContent(String content, String template, String dir, int chapter) {
-        File file = getChapterFile(dir, chapter);
-//  TODO uncomment
-//      if (file.exists()) return file;
+    public File getBookFile(File dir) {
+        return FileUtils.concatToFile(dir.getPath(), BOOK_FILE_NAME);
+    }
 
+    public String getBody(String content) {
         // body
         int start = content.indexOf("<body") + 6;
         for (int i = start; i <= content.length(); i++) {
@@ -46,13 +43,14 @@ public abstract class AbstractBookManager {
                 break;
             }
         }
+        return content.substring(start, content.indexOf("</body>"));
+    }
 
-        // replace
-        content = content.substring(start, content.indexOf("</body>"));
+    public File createContent(String content, String template, File bookFile) {
         template = template.replace("${content}", content);
 
         try {
-            FileWriter writer = new FileWriter(file);
+            FileWriter writer = new FileWriter(bookFile);
             writer.write(template);
             writer.flush();
             writer.close();
@@ -60,6 +58,6 @@ public abstract class AbstractBookManager {
             e.printStackTrace();
         }
 
-        return file;
+        return bookFile;
     }
 }

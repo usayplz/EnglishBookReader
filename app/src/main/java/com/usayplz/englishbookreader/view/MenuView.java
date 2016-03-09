@@ -28,6 +28,8 @@ public class MenuView extends AlertDialog implements AdapterView.OnItemClickList
     private Context context;
     private int page;
     private int maxPage;
+    private boolean firstChange = true;
+
 
     public MenuView(Context context, int page, int maxPage, IMenuView listener) {
         super(context);
@@ -57,7 +59,11 @@ public class MenuView extends AlertDialog implements AdapterView.OnItemClickList
         pagebar.setOnEditableSeekBarChangeListener(new EditableSeekBar.OnEditableSeekBarChangeListener() {
             @Override
             public void onEditableSeekBarProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                listener.onPageChanged(progress);
+                if (firstChange) {
+                    firstChange = false;
+                } else {
+                    listener.onPageChanged(progress);
+                }
             }
 
             @Override

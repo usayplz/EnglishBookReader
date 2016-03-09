@@ -27,8 +27,8 @@ public class BookDao {
     public Observable<List<Book>> getAll() {
         return db.createQuery(Book.TABLE, "select * from " + Book.TABLE + " order by " + Book.COL_TITLE)
                 .mapToList(Book.MAPPER)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
     }
 
     public Book get(Long id) {

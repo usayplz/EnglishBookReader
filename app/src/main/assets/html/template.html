@@ -68,21 +68,16 @@
             d.style.webkitColumnGap = columnGap + 'px';
             d.style.webkitColumnCount = pageCount;
 
+            $('body').scrollLeft(window.innerWidth * page);
+            $('#fill_screen').hide();
+
             var columnCount = Math.ceil($('#end_marker').offset().left / (ourWidth + columnGap));
-
-            if (page == -1) {
-                page = columnCount;
-            }
-
-            if (page != -1000) {
-                $("body").scrollLeft(window.innerWidth * page);
-                $('#fill_screen').hide();
-            }
             android.getPageCount(columnCount);
         }
 
         function setPage(page) {
-            $("body").animate({scrollLeft: window.innerWidth*page});
+            $('body').scrollLeft(window.innerWidth * page);
+            //$("body").animate({scrollLeft: window.innerWidth*page});
         }
 
         document.onclick = globalOnClickHandler;

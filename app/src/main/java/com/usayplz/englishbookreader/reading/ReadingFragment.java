@@ -16,6 +16,7 @@ import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
+import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.view.EBookView;
 import com.usayplz.englishbookreader.view.MenuView;
 
@@ -24,9 +25,9 @@ import java.io.File;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-
 /**
- * A placeholder fragment containing a simple view.
+ * Created by Sergei Kurikalov on 03/02/16.
+ * u.sayplz@gmail.com
  */
 
 public class ReadingFragment extends BaseFragment implements ReadingView, EBookView.EBookListener {
@@ -37,7 +38,6 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     @Bind(R.id.bottom) ImageView bottomView;
     @Bind(R.id.main) RelativeLayout mainView;
 
-    private boolean bugFixLessV19 = true; // unknown bug in WebView less than ver. 19
     private ReadingPresenter presenter;
 
     @Override
@@ -64,6 +64,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
 
     @Override
     public void showMenu(int page, int maxPage) {
+        Log.d("page: " + page + ", max: " + maxPage);
         MenuView menuView = new MenuView(getActivity(), page, maxPage, new MenuView.IMenuView() {
             @Override
             public void onPageChanged(int page) {
@@ -73,6 +74,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
             @Override
             public void onMenuItemClicked(int id) {
                 ReadingMenuItem readingMenuItem = ReadingMenuItem.byId(id);
+                if (readingMenuItem == null) return;
 
                 switch (readingMenuItem) {
                     case SETTINGS:
@@ -96,9 +98,9 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     }
 
     @Override
-    public void showContent(File chapterFile, Settings settings, int page, int maxPage) {
+    public void showContent(File content, Settings settings, int page) {
         applySettings(settings);
-        getActivity().runOnUiThread(() -> bookView.loadContent(chapterFile, settings, page));
+        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
     }
 
     private void applySettings(Settings settings) {
@@ -140,12 +142,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
 
     @Override
     public void onGetPageCount(int pagecount) {
-        if (bugFixLessV19) {
-            presenter.getContent();
-            bugFixLessV19 = false;
-        } else {
-            presenter.setPageCount(pagecount);
-        }
+        presenter.setPageCount(pagecount);
     }
 
     @Override

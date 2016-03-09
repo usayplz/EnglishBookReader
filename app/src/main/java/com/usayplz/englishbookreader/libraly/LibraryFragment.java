@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.model.Book;
-import com.usayplz.englishbookreader.preference.UserData;
 import com.usayplz.englishbookreader.reading.ReadingActivity;
 
 import java.util.List;
@@ -78,17 +77,16 @@ public class LibraryFragment extends BaseFragment implements LibraryView, ShelfA
     }
 
     @Override
-    public void openBook(long id) {
+    public void openBook() {
         Intent intent = new Intent(getActivity(), ReadingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(UserData.APP_PREF_BOOK_ID, id);
         startActivity(intent);
         getActivity().finish();
     }
 
     @Override
     public void onShelfClicked(int position) {
-        presenter.onOpenBook(adapter.getBook(position));
+        presenter.openBook(adapter.getBook(position));
     }
 
     @Override
