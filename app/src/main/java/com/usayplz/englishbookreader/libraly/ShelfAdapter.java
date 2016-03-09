@@ -35,7 +35,7 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_shelf, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shelf_list_item, parent, false);
         return new ViewHolder(view, this.listener);
     }
 

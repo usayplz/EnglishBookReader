@@ -11,6 +11,7 @@ import com.usayplz.englishbookreader.preference.PreferencesManager;
 import com.usayplz.englishbookreader.preference.UserData;
 import com.usayplz.englishbookreader.reading.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.utils.FileUtils;
+import com.usayplz.englishbookreader.utils.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class ReadingPresenter extends BasePresenter<ReadingView> {
     private static final String BOOK_TEMPLATE = "html/template.html";
-    private static final int PAGE_COUNTING_FLAG = -1000;
+    public static final int PAGE_COUNTING_FLAG = -1000;
 
     private Settings settings;
     private AbstractBookManager bookManager;
@@ -32,7 +33,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     private int maxPageCount;
     private boolean isLoading = false;
     private boolean isCounting = false;
-    private int file_index;
+    private int chapter_index;
     private List<File> files;
     private List<Chapter> chapters;
 
@@ -61,41 +62,52 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
                 getView().showLoading(R.string.progress_loading_book);
                 String template = FileUtils.loadAsset(getView().getContext(), BOOK_TEMPLATE);
                 this.files = bookManager.process(book, template);
-                this.file_index = files.size();
+                this.chapter_index = files.size();
                 this.isCounting = true;
                 this.chapters = new ArrayList<>();
                 nextFileCounting();
             } else {
-                if (chapters == null) {
+                if (chapters == null || chapters.size() == 0) {
                     ChapterDao chapterDao = new ChapterDao(getView().getContext());
                     chapterDao.getByBook(book.getId())
                             .subscribe(chapters -> {
                                 this.chapters = chapters;
 
                                 File chapterFile = bookManager.getChapterFile(book.getDir(), book.getChapter());
-                                getView().showContent(chapterFile, settings, book.getPage());
+                                getView().showContent(chapterFile, settings, getCurrentPage(), book.getMaxPageCount());
                             });
                 } else {
                     File chapterFile = bookManager.getChapterFile(book.getDir(), book.getChapter());
-                    getView().showContent(chapterFile, settings, book.getPage());
+                    getView().showContent(chapterFile, settings, getCurrentPage(), book.getMaxPageCount());
                 }
             }
         }
     }
 
+    private int getCurrentPage() {
+        int count = 0;
+        for (int i = 0; i < chapters.size(); i++) {
+            count += chapters.get(i).getPageCount();
+            if (count > book.getPage()) {
+                return count - book.getPage();
+            }
+        }
+        return 0;
+    }
+
     private void nextFileCounting() {
-        file_index--;
-        if (file_index < 0) {
+        chapter_index--;
+        if (chapter_index < 0) {
             isCounting = false;
             book.setMaxPageCount(maxPageCount);
             saveBook();
-            saveChapter();
+            saveChapters();
             getContent();
             return;
         }
 
         if (getView() != null) {
-            getView().showContent(files.get(file_index), settings, PAGE_COUNTING_FLAG);
+            getView().showContent(files.get(chapter_index), settings, PAGE_COUNTING_FLAG, 0);
         }
     }
 
@@ -111,10 +123,10 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         }
     }
 
-    public void saveChapter() {
+    public void saveChapters() {
         if (getView() != null) {
             ChapterDao chapterDao = new ChapterDao(getView().getContext());
-            chapterDao.removeAll();
+            chapterDao.removeByBook(book.getId());
             chapterDao.addAll(chapters);
         }
     }
@@ -151,7 +163,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void setPageCount(int pageCount) {
         if (isCounting) {
-            addChapter(pageCount);
+            chapters.add(new Chapter(book.getId(), chapter_index, pageCount));
             this.maxPageCount += pageCount;
             nextFileCounting();
             return;
@@ -169,12 +181,26 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         }
     }
 
-    private void addChapter(int pageCount) {
-        Chapter chapter = new Chapter();
-        chapter.setBookId(book.getId());
-        chapter.setChapter(file_index);
-        chapter.setPageCount(pageCount);
+    public void createMenu() {
+        if (getView() != null && book.getMaxPageCount() > 0) {
+            getView().showMenu(book.getPage() + 1, book.getMaxPageCount() + 1);
+        }
+    }
 
-        chapters.add(chapter);
+    public void getContent(int page) {
+        int count = 0;
+        Log.d("size: " + chapters.size());
+        for (int i = 0; i < chapters.size(); i++) {
+            count += chapters.get(i).getPageCount();
+            Log.d(String.format("chapter %s, page: %s", chapters.get(i).getPageCount(), chapters.get(i).getChapter()));
+            if (count > page) {
+                book.setPage(count - page);
+                book.setChapter(chapters.get(i).getChapter());
+                Log.d(String.format("chapter %s, page: %s", book.getPage(), book.getChapter()));
+                break;
+            }
+        }
+
+        this.getContent();
     }
 }

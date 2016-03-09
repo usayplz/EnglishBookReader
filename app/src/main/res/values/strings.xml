@@ -24,4 +24,5 @@
     <string name="default_book_title">Unknown</string>
     <string name="search">Search</string>
     <string name="progress_loading_book">Loading book...</string>
+    <string name="go2page">Go to page</string>
 </resources>

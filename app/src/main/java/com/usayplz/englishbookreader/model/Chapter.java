@@ -49,6 +49,15 @@ public class Chapter {
         return values;
     }
 
+    public Chapter() {
+    }
+
+    public Chapter(long bookId, int chapter, int pageCount) {
+        this.bookId = bookId;
+        this.chapter = chapter;
+        this.pageCount = pageCount;
+    }
+
     public long getId() {
         return id;
     }

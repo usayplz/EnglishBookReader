@@ -1,7 +1,6 @@
 package com.usayplz.englishbookreader.db;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
@@ -31,14 +30,16 @@ public class ChapterDao {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Chapter get(Long bookId, Integer chapter) {
-        Cursor cursor = db.query(String.format("select * from %s where %s = %s and %s = %s", Chapter.TABLE, Chapter.COL_BOOK_ID, bookId, Chapter.COL_CHAPTER, chapter));
-        if (!cursor.moveToFirst()) return null;
-        return Chapter.MAPPER.call(cursor);
-    }
-
     public void add(Chapter chapter) {
         db.insert(Chapter.TABLE, chapter.getContentValues());
+    }
+
+    public void remove(Long id) {
+        db.delete(Chapter.TABLE, Chapter.COL_ID + " = ?", id.toString());
+    }
+
+    public void update(Chapter chapter) {
+        db.update(Chapter.TABLE, chapter.getContentValues(), Chapter.COL_ID + " = ?", String.valueOf(chapter.getId()));
     }
 
     public void addAll(List<Chapter> chapters) {
@@ -50,15 +51,12 @@ public class ChapterDao {
         transaction.close();
     }
 
-    public void remove(Long id) {
-        db.delete(Chapter.TABLE, Chapter.COL_ID + " = ?", id.toString());
+    public void removeByBook(Long bookId) {
+        db.delete(Chapter.TABLE, Chapter.COL_BOOK_ID + " = ?", bookId.toString());
     }
 
     public void removeAll() {
         db.delete(Chapter.TABLE, "");
     }
 
-    public void update(Chapter chapter) {
-        db.update(Chapter.TABLE, chapter.getContentValues(), Chapter.COL_ID + " = ?", String.valueOf(chapter.getId()));
-    }
 }

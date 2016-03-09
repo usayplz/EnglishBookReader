@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
 import com.usayplz.englishbookreader.view.EBookView;
+import com.usayplz.englishbookreader.view.MenuView;
 
 import java.io.File;
 
@@ -54,9 +54,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         bookView.setListener(this);
         leftView.setOnClickListener(v -> onPrevious());
         rightView.setOnClickListener(v -> onNext());
-
-        registerForContextMenu(bottomView);
-        bottomView.setOnClickListener(v -> getActivity().openContextMenu(v));
+        bottomView.setOnClickListener(v -> presenter.createMenu());
 
         // presenter
         presenter = new ReadingPresenter();
@@ -65,39 +63,40 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle(null);
-        for (ReadingMenuItem item : ReadingMenuItem.values()) {
-            menu.add(item.group, item.id, item.order, item.name);
-        }
+    public void showMenu(int page, int maxPage) {
+        MenuView menuView = new MenuView(getActivity(), page, maxPage, new MenuView.IMenuView() {
+            @Override
+            public void onPageChanged(int page) {
+                presenter.getContent(page);
+            }
 
-        super.onCreateContextMenu(menu, v, menuInfo);
+            @Override
+            public void onMenuItemClicked(int id) {
+                ReadingMenuItem readingMenuItem = ReadingMenuItem.byId(id);
+
+                switch (readingMenuItem) {
+                    case SETTINGS:
+                        Intent intent = new Intent(getActivity(), PreferencesActivity.class);
+                        startActivityForResult(intent, PreferencesActivity.SETTINGS_CHANGED_REQUEST);
+                        break;
+                    case LIBRARY:
+                        startActivity(new Intent(getActivity(), LibraryActivity.class));
+                        break;
+                    case NIGHTMODE:
+                        break;
+                    case EXIT:
+                        getActivity().finish();
+                        System.exit(0);
+                        break;
+                }
+            }
+        });
+
+        menuView.show();
     }
 
     @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
-        ReadingMenuItem readingMenuItem = ReadingMenuItem.byId(item.getItemId());
-        if (readingMenuItem == null) return false;
-
-        switch (readingMenuItem) {
-            case SETTINGS:
-                Intent intent = new Intent(getActivity(), PreferencesActivity.class);
-                startActivityForResult(intent, PreferencesActivity.SETTINGS_CHANGED_REQUEST);
-                return true;
-            case LIBRARY:
-                startActivity(new Intent(getActivity(), LibraryActivity.class));
-                return true;
-            case EXIT:
-                getActivity().finish();
-                System.exit(0);
-                return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public void showContent(File chapterFile, Settings settings, int page) {
+    public void showContent(File chapterFile, Settings settings, int page, int maxPage) {
         applySettings(settings);
         getActivity().runOnUiThread(() -> bookView.loadContent(chapterFile, settings, page));
     }

@@ -3,6 +3,7 @@ package com.usayplz.englishbookreader.libraly;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.db.BookDao;
+import com.usayplz.englishbookreader.db.ChapterDao;
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.preference.UserData;
@@ -78,6 +79,9 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
 
             BookDao bookDao = new BookDao(getView().getContext());
             bookDao.removeAll();
+
+            ChapterDao chapterDao = new ChapterDao(getView().getContext());
+            chapterDao.removeAll();
 
             ScanDriveEngine scanDriveEngine = new ScanDriveEngine();
             scanDriveEngine.find()

@@ -90,7 +90,9 @@
             var s = window.getSelection();
             s.modify('move','backward', 'word');
             s.modify('extend','forward', 'word');
-            android.onTextSelected(s.toString());
+            if (s.toString() != '') {
+                android.onTextSelected(s.toString());
+            }
         }
     </script>
 </body>
