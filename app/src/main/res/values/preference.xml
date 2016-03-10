@@ -32,7 +32,7 @@
 
     <string name="pref_font_size_title">Font size</string>
     <string name="pref_font_size">pref_font_size</string>
-    <string name="pref_font_size_default">14</string>
+    <string name="pref_font_size_default">18</string>
 
     <string name="pref_font_color_title">Font color</string>
     <string name="pref_font_color">pref_font_color</string>
