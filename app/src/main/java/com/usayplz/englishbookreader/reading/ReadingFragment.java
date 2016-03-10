@@ -59,6 +59,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
         // presenter
         presenter = new ReadingPresenter();
         presenter.attachView(this);
+        presenter.getSettings();
         presenter.getContent();
     }
 
@@ -86,8 +87,6 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
                     case LIBRARY:
                         startActivity(new Intent(getActivity(), LibraryActivity.class));
                         break;
-                    case NIGHTMODE:
-                        break;
                     case EXIT:
                         getActivity().finish();
                         System.exit(0);
@@ -100,13 +99,17 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
 
     @Override
     public void showContent(File content, Settings settings, int page) {
-        applySettings(settings);
-        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
+        getActivity().runOnUiThread(() -> {
+            applySettings(settings);
+            bookView.loadContent(content, settings, page);
+        });
+
     }
 
-    private void applySettings(Settings settings) {
-        mainView.setBackgroundColor(settings.getBackgroundColor());
+    @Override
+    public void applySettings(Settings settings) {
         bookView.setBackgroundColor(settings.getBackgroundColor());
+        mainView.setBackgroundColor(settings.getBackgroundColor());
 
         rightView.getLayoutParams().width = settings.getMarginRight();
         bottomView.getLayoutParams().height = settings.getMarginBottom();

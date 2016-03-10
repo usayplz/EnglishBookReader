@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
@@ -69,5 +70,14 @@ public class FileUtils {
             Log.d(e.getMessage());
             return null;
         }
+    }
+
+    public static void appendFile(File file, String content) throws IOException {
+        boolean append = file.exists();
+
+        FileWriter writer = new FileWriter(file, append);
+        writer.write(content);
+        writer.flush();
+        writer.close();
     }
 }

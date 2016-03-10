@@ -169,6 +169,10 @@ public class EBookView extends WebView {
         this.listener = listener;
     }
 
+    public void setNightmode(int font_color, int background_color) {
+        loadUrl(String.format("javascript:nightmode('%s', '%s');", Strings.colorToRGB(font_color), Strings.colorToRGB(background_color)));
+    }
+
     public interface EBookListener {
         void onTextSelected(String word);
 

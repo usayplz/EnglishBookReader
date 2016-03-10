@@ -5,12 +5,13 @@ package com.usayplz.englishbookreader.model;
  * u.sayplz@gmail.com
  */
 public enum BookType {
-    EPUB(0, ".epub"), FB2(1, ".fb2");
+    EPUB(0, ".epub"),
+    FB2(1, ".fb2");
 
     private int code;
     private String extension;
 
-    private BookType(int code, String extension) {
+    BookType(int code, String extension) {
         this.code = code;
         this.extension = extension;
     }

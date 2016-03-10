@@ -16,7 +16,7 @@ public class Settings implements Serializable {
     private Integer MarginRight;
     private Integer backgroundColor;
     private Integer fontColor;
-    private Boolean nightMode;
+    private Boolean nightmode;
 
 //    private Boolean preventSleeping;
 //    private Integer textLineSpacing;
@@ -95,11 +95,11 @@ public class Settings implements Serializable {
         this.fontColor = fontColor;
     }
 
-    public Boolean getNightMode() {
-        return nightMode;
+    public Boolean getNightmode() {
+        return nightmode;
     }
 
-    public void setNightMode(Boolean nightMode) {
-        this.nightMode = nightMode;
+    public void setNightmode(Boolean nightmode) {
+        this.nightmode = nightmode;
     }
 }

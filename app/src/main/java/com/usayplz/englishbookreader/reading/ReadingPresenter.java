@@ -19,7 +19,8 @@ import rx.schedulers.Schedulers;
  */
 
 public class ReadingPresenter extends BasePresenter<ReadingView> {
-    private static final String BOOK_TEMPLATE = "html/template.html";
+    private static final String BOOK_TEMPLATE_HEADER = "html/template_header.html";
+    private static final String BOOK_TEMPLATE_FOOTER = "html/template_footer.html";
 
     private Settings settings;
     private AbstractBookManager bookManager;
@@ -46,9 +47,10 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
                 this.settings = preferencesManager.getPreferences(getView().getContext());
             }
 
-            String template = FileUtils.loadAsset(getView().getContext(), BOOK_TEMPLATE);
+            String templateHeader = FileUtils.loadAsset(getView().getContext(), BOOK_TEMPLATE_HEADER);
+            String templateFooter = FileUtils.loadAsset(getView().getContext(), BOOK_TEMPLATE_FOOTER);
             bookManager
-                    .getContent(book, template)
+                    .getContent(book, templateHeader, templateFooter)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(file -> {
@@ -67,7 +69,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void getContent(int page) {
         if (getView() != null) {
-            book.setPage(page-1);
+            book.setPage(page - 1);
             getView().setPage(book.getPage());
         }
     }
@@ -109,7 +111,18 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void createMenu() {
         if (getView() != null && book.getLastPage() >= 0) {
-            getView().showMenu(book.getPage()+1, book.getLastPage()+1);
+            getView().showMenu(book.getPage() + 1, book.getLastPage() + 1);
+        }
+    }
+
+    public void getSettings() {
+        if (getView() != null) {
+            if (settings == null) {
+                PreferencesManager preferencesManager = new PreferencesManager();
+                this.settings = preferencesManager.getPreferences(getView().getContext());
+            }
+
+            getView().applySettings(settings);
         }
     }
 }

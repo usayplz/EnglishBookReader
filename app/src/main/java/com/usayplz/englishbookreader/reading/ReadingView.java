@@ -11,6 +11,10 @@ import java.io.File;
  */
 public interface ReadingView extends BaseView {
     void showContent(File content, Settings settings, int page);
+
+    void applySettings(Settings settings);
+
     void setPage(int page);
+
     void showMenu(int page, int maxPageCount);
 }

@@ -10,6 +10,7 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
 
-    <color name="font_day">#111111</color>
-    <color name="font_night">#eeeeee</color>
+    <color name="day">#111111</color>
+    <color name="night">#eeeeee</color>
+
 </resources>

@@ -41,7 +41,7 @@ public class EpubManager extends AbstractBookManager {
     }
 
     @Override
-    public Observable<File> getContent(Book book, String template) {
+    public Observable<File> getContent(Book book, String templateHeader, String templateFooter) {
         return Observable.defer(() -> {
             try {
                 File file = new File(book.getFile());
@@ -55,12 +55,13 @@ public class EpubManager extends AbstractBookManager {
                     return Observable.just(bookFile);
                 }
 
-                String content = "";
                 nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(book.getFile()));
+                FileUtils.appendFile(bookFile, templateHeader);
                 for (int chapter = 0; chapter < epubBook.getContents().size(); chapter++) {
-                    content += getBody(new String(epubBook.getContents().get(chapter).getData()));
+                    String content = getBody(new String(epubBook.getContents().get(chapter).getData()));
+                    FileUtils.appendFile(bookFile, content);
                 }
-                bookFile = createContent(content, template, bookFile);
+                FileUtils.appendFile(bookFile, templateFooter);
 
                 if (bookFile.exists()) {
                     return Observable.just(bookFile);

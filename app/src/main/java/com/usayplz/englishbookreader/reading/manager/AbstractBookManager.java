@@ -5,8 +5,6 @@ import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.utils.FileUtils;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import rx.Observable;
 
@@ -18,7 +16,7 @@ public abstract class AbstractBookManager {
     private static final String BOOK_FILE_NAME = "book.html";
 
     public abstract Book getBookInfo(String filePath, String filesPath);
-    public abstract Observable<File> getContent(Book book, String template);
+    public abstract Observable<File> getContent(Book book, String templateHeader, String templateFooter);
 
     public static AbstractBookManager getBookManager(BookType type) {
         switch (type) {
@@ -44,20 +42,5 @@ public abstract class AbstractBookManager {
             }
         }
         return content.substring(start, content.indexOf("</body>"));
-    }
-
-    public File createContent(String content, String template, File bookFile) {
-        template = template.replace("${content}", content);
-
-        try {
-            FileWriter writer = new FileWriter(bookFile);
-            writer.write(template);
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return bookFile;
     }
 }

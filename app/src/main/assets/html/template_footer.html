@@ -1,60 +1,12 @@
-<html>
-<head>
-    <script src='file:///android_asset/html/jquery.min.js'></script>
-    <style type="text/css">
-        @font-face { font-family: Chivo-Regular; src: url('file:///android_asset/fonts/Chivo-Regular.ttf');}
-        @font-face { font-family: OpenSans-Regular; src: url('file:///android_asset/fonts/OpenSans-Regular.ttf');}
-        @font-face { font-family: Roboto-Mono-Regular; src: url('file:///android_asset/fonts/Roboto-Mono-Regular.ttf');}
+<span id="end_marker"></span></div>
 
-        img {
-            max-width: 100% !important;
-            max-height: 100% !important;
-        }
-
-        body {
-            padding: 0px;
-            margin: 0px;
-            background-color: #ffffff;
-        }
-
-        p, div {
-            margin: 0px;
-            padding: 6px 0px 0px 0px;
-        }
-
-        .title {
-             font-size: 120%;
-        }
-
-        #content {
-            text-align: justify;
-            padding: 0px;
-            margin: 0px;
-        }
-
-        #fill_screen {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
-            right:0;
-            bottom:0;
-            background-color: #ffffff;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="fill_screen"></div>
-    <div id="content">${content}<span id="end_marker"></span></div>
-
-    <script>
+<script>
 
         function init(font_family, font_size, font_color, background_color, page) {
             $('#content').css('font-family', "'" + font_family + "'");
             $('#content').css('font-size', font_size + 'px');
             $('#content').css('color', font_color);
+            $('#fill_screen').css('background-color', background_color);
             $('body').css('background-color', background_color);
 
             var columnGap = 2;
@@ -83,7 +35,6 @@
                 }
             }, 50);
         }
-
 
         function setPage(page) {
             $('body').scrollLeft(window.innerWidth * page);
