@@ -26,16 +26,16 @@ public class BaseFragment extends Fragment implements BaseView {
     @Override
     public void showLoading(int message) {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(getActivity(), getString(message));
+            progressDialog = new ProgressDialog();
         }
 
-        progressDialog.show();
+        progressDialog.show(getActivity().getSupportFragmentManager(), getString(message));
     }
 
     @Override
     public void hideLoading() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.cancel();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
         }
     }
 }

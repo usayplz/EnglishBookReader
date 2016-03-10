@@ -67,7 +67,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void getContent(int page) {
         if (getView() != null) {
-            book.setPage(page);
+            book.setPage(page-1);
             getView().setPage(book.getPage());
         }
     }
@@ -85,18 +85,14 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void nextPage() {
-        if (isLoading || getView() == null) return;
-
-        if (book.getPage() < book.getLastPage()) {
+        if (book.getPage() < book.getLastPage() && !isLoading && getView() != null) {
             book.setPage(book.getPage() + 1);
             getView().setPage(book.getPage());
         }
     }
 
     public void previousPage() {
-        if (isLoading || getView() == null) return;
-
-        if (book.getPage() > 0) {
+        if (book.getPage() > 0 && !isLoading && getView() != null) {
             book.setPage(book.getPage() - 1);
             getView().setPage(book.getPage());
         }
@@ -105,7 +101,6 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     public void setPageCount(int lastPage) {
         this.isLoading = false;
         book.setLastPage(lastPage);
-        saveBook();
 
         if (getView() != null) {
             getView().hideLoading();
@@ -113,8 +108,8 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void createMenu() {
-        if (getView() != null) {
-            getView().showMenu(book.getPage(), book.getLastPage());
+        if (getView() != null && book.getLastPage() > 0) {
+            getView().showMenu(book.getPage()+1, book.getLastPage()+1);
         }
     }
 }

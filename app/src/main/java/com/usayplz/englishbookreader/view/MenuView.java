@@ -1,13 +1,16 @@
 package com.usayplz.englishbookreader.view;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,53 +20,44 @@ import android.widget.TextView;
 import com.gregacucnik.EditableSeekBar;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.reading.ReadingMenuItem;
+import com.usayplz.englishbookreader.utils.Log;
 
 
 /**
  * Created by Sergei Kurikalov on 09/03/16.
  * u.sayplz@gmail.com
  */
-public class MenuView extends AlertDialog implements AdapterView.OnItemClickListener {
-    private final IMenuView listener;
-    private Context context;
+public class MenuView extends DialogFragment {
+    private static final String TAG = "menu_view";
+
+    private IMenuView listener;
     private int page;
     private int maxPage;
-    private boolean firstChange = true;
 
+    public MenuView() {
+    }
 
-    public MenuView(Context context, int page, int maxPage, IMenuView listener) {
-        super(context);
-        this.context = context;
-        this.maxPage = maxPage;
+    public void show(FragmentManager manager, int page, int maxPage, IMenuView listener) {
+        super.show(manager, TAG);
         this.page = page;
+        this.maxPage = maxPage;
         this.listener = listener;
     }
 
+    @NonNull
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        @SuppressLint("InflateParams") View view = LayoutInflater.from(context).inflate(R.layout.view_menu, null);
-        this.setView(view);
-        this.setCancelable(true);
-        this.setTitle(null);
-
-        int width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.80);
-        this.getWindow().setLayout(width, -2);
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.view_menu, null);
 
         ListView list = (ListView) view.findViewById(R.id.list);
         list.setAdapter(new MenuAdapter());
-        list.setOnItemClickListener(this);
+        list.setOnItemClickListener((parent, view1, position, id) -> listener.onMenuItemClicked((int) id));
 
+        Log.d("page: " + page + ", maxPage: " + maxPage);
         EditableSeekBar pagebar = (EditableSeekBar) view.findViewById(R.id.pagebar);
-        pagebar.setValue(page);
-        pagebar.setMaxValue(maxPage);
         pagebar.setOnEditableSeekBarChangeListener(new EditableSeekBar.OnEditableSeekBarChangeListener() {
             @Override
             public void onEditableSeekBarProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (firstChange) {
-                    firstChange = false;
-                } else {
-                    listener.onPageChanged(progress);
-                }
             }
 
             @Override
@@ -88,16 +82,16 @@ public class MenuView extends AlertDialog implements AdapterView.OnItemClickList
 
             @Override
             public void onEditableSeekBarValueChanged(int value) {
-
+                listener.onPageChanged(value);
             }
         });
+        pagebar.setMaxValue(maxPage);
+        pagebar.setValue(page);
 
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        listener.onMenuItemClicked((int) id);
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(null)
+                .setView(view)
+                .create();
     }
 
     private class MenuAdapter extends BaseAdapter {
@@ -122,7 +116,7 @@ public class MenuView extends AlertDialog implements AdapterView.OnItemClickList
 
             ViewHolder holder;
             if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.menu_list_item, parent, false);
 
                 holder = new ViewHolder();
@@ -135,7 +129,7 @@ public class MenuView extends AlertDialog implements AdapterView.OnItemClickList
             }
 
             holder.icon.setImageResource(item.icon);
-            holder.name.setText(context.getString(item.name));
+            holder.name.setText(getContext().getString(item.name));
 
             return convertView;
         }

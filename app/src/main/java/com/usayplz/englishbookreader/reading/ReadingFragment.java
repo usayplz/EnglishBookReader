@@ -16,7 +16,6 @@ import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
-import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.view.EBookView;
 import com.usayplz.englishbookreader.view.MenuView;
 
@@ -39,6 +38,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
     @Bind(R.id.main) RelativeLayout mainView;
 
     private ReadingPresenter presenter;
+    private MenuView menuView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,8 +64,10 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
 
     @Override
     public void showMenu(int page, int maxPage) {
-        Log.d("page: " + page + ", max: " + maxPage);
-        MenuView menuView = new MenuView(getActivity(), page, maxPage, new MenuView.IMenuView() {
+        if (menuView == null) {
+            menuView = new MenuView();
+        }
+        menuView.show(getActivity().getSupportFragmentManager(), page, maxPage, new MenuView.IMenuView() {
             @Override
             public void onPageChanged(int page) {
                 presenter.getContent(page);
@@ -91,10 +93,9 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
                         System.exit(0);
                         break;
                 }
+                menuView.dismiss();
             }
         });
-
-        menuView.show();
     }
 
     @Override
