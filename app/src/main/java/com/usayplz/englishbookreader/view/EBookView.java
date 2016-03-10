@@ -16,7 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.usayplz.englishbookreader.model.Settings;
-import com.usayplz.englishbookreader.utils.FileUtils;
 import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.utils.Strings;
 
@@ -92,13 +91,17 @@ public class EBookView extends WebView {
                 super.onPageFinished(view, url);
 
                 if (settings != null) {
-                    loadUrl("javascript:" + FileUtils.loadAsset(getContext(), "html/jquery.min.js"));
                     loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s');",
                             settings.getFontFamily(),
                             settings.getFontSize(),
                             Strings.colorToRGB(settings.getFontColor()),
                             Strings.colorToRGB(settings.getBackgroundColor()), page));
                 }
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return super.shouldOverrideUrlLoading(view, url);
             }
         });
 

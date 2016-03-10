@@ -108,7 +108,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void createMenu() {
-        if (getView() != null && book.getLastPage() > 0) {
+        if (getView() != null && book.getLastPage() >= 0) {
             getView().showMenu(book.getPage()+1, book.getLastPage()+1);
         }
     }

@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.gregacucnik.EditableSeekBar;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.reading.ReadingMenuItem;
-import com.usayplz.englishbookreader.utils.Log;
 
 
 /**
@@ -53,8 +52,9 @@ public class MenuView extends DialogFragment {
         list.setAdapter(new MenuAdapter());
         list.setOnItemClickListener((parent, view1, position, id) -> listener.onMenuItemClicked((int) id));
 
-        Log.d("page: " + page + ", maxPage: " + maxPage);
         EditableSeekBar pagebar = (EditableSeekBar) view.findViewById(R.id.pagebar);
+        pagebar.setMaxValue(maxPage);
+        pagebar.setValue(page);
         pagebar.setOnEditableSeekBarChangeListener(new EditableSeekBar.OnEditableSeekBarChangeListener() {
             @Override
             public void onEditableSeekBarProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -85,8 +85,6 @@ public class MenuView extends DialogFragment {
                 listener.onPageChanged(value);
             }
         });
-        pagebar.setMaxValue(maxPage);
-        pagebar.setValue(page);
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(null)

@@ -29,6 +29,10 @@ public class BaseFragment extends Fragment implements BaseView {
             progressDialog = new ProgressDialog();
         }
 
+        if (progressDialog.isAdded()) {
+            progressDialog.dismiss();
+        }
+
         progressDialog.show(getActivity().getSupportFragmentManager(), getString(message));
     }
 
