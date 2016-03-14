@@ -4,11 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/view_horizontal_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/view_horizontal_margin"
-    >
+    android:padding="@dimen/activity_horizontal_margin">
 
     <ImageView
         android:id="@+id/icon"
@@ -24,5 +20,5 @@
         android:layout_gravity="center_vertical"
         android:textSize="16sp"
         android:textColor="@color/day"
-        android:paddingLeft="@dimen/activity_horizontal_margin"/>
+        android:paddingLeft="@dimen/activity_horizontal_margin" />
 </LinearLayout>
