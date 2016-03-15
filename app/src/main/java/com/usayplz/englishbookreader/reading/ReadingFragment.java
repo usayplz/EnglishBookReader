@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.usayplz.englishbookreader.R;
@@ -16,7 +14,7 @@ import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
-import com.usayplz.englishbookreader.view.EBookView;
+import com.usayplz.englishbookreader.view.BookView;
 import com.usayplz.englishbookreader.view.MenuView;
 
 import java.io.File;
@@ -29,13 +27,8 @@ import butterknife.ButterKnife;
  * u.sayplz@gmail.com
  */
 
-public class ReadingFragment extends BaseFragment implements ReadingView, EBookView.EBookListener {
-    @Bind(R.id.book) EBookView bookView;
-    @Bind(R.id.left) View leftView;
-    @Bind(R.id.right) View rightView;
-    @Bind(R.id.top) View topView;
-    @Bind(R.id.bottom) ImageView bottomView;
-    @Bind(R.id.main) RelativeLayout mainView;
+public class ReadingFragment extends BaseFragment implements ReadingView, BookView.EBookListener {
+    @Bind(R.id.book) BookView bookView;
 
     private ReadingPresenter presenter;
     private MenuView menuView;
@@ -52,14 +45,10 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
 
         // Views
         bookView.setListener(this);
-        leftView.setOnClickListener(v -> onPrevious());
-        rightView.setOnClickListener(v -> onNext());
-        bottomView.setOnClickListener(v -> presenter.createMenu());
 
         // presenter
         presenter = new ReadingPresenter();
         presenter.attachView(this);
-        presenter.getSettings();
         presenter.getContent();
     }
 
@@ -99,22 +88,8 @@ public class ReadingFragment extends BaseFragment implements ReadingView, EBookV
 
     @Override
     public void showContent(File content, Settings settings, int page) {
-        getActivity().runOnUiThread(() -> {
-            applySettings(settings);
-            bookView.loadContent(content, settings, page);
-        });
+        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
 
-    }
-
-    @Override
-    public void applySettings(Settings settings) {
-        bookView.setBackgroundColor(settings.getBackgroundColor());
-        mainView.setBackgroundColor(settings.getBackgroundColor());
-
-        rightView.getLayoutParams().width = settings.getMarginRight();
-        bottomView.getLayoutParams().height = settings.getMarginBottom();
-        leftView.getLayoutParams().width = settings.getMarginLeft();
-        topView.getLayoutParams().height = settings.getMarginTop();
     }
 
     @Override

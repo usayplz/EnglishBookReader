@@ -25,7 +25,7 @@ import java.io.File;
  * Created by Sergei Kurikalov on 03/02/16.
  * u.sayplz@gmail.com
  */
-public class EBookView extends WebView {
+public class BookView extends WebView {
     private static final float SCROLL_THRESHOLD = 0.1f;
 
     private float posX;
@@ -35,17 +35,17 @@ public class EBookView extends WebView {
     private Settings settings;
     private int page;
 
-    public EBookView(Context context) {
+    public BookView(Context context) {
         super(context);
         init();
     }
 
-    public EBookView(Context context, AttributeSet attrs) {
+    public BookView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public EBookView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BookView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

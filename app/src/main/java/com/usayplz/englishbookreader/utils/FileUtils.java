@@ -72,10 +72,8 @@ public class FileUtils {
         }
     }
 
-    public static void appendFile(File file, String content) throws IOException {
-        boolean append = file.exists();
-
-        FileWriter writer = new FileWriter(file, append);
+    public static void whiteFile(File file, String content) throws IOException {
+        FileWriter writer = new FileWriter(file);
         writer.write(content);
         writer.flush();
         writer.close();

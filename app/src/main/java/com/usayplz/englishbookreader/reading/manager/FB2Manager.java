@@ -17,7 +17,7 @@ public class FB2Manager extends AbstractBookManager {
     }
 
     @Override
-    public Observable<File> getContent(Book book, String templateHeader, String templateFooter) {
+    public Observable<File> getContent(Book book, String template) {
         return null;
     }
 }

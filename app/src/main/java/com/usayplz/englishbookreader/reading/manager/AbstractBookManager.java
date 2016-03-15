@@ -5,6 +5,7 @@ import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.utils.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import rx.Observable;
 
@@ -13,10 +14,10 @@ import rx.Observable;
  * u.sayplz@gmail.com
  */
 public abstract class AbstractBookManager {
-    private static final String BOOK_FILE_NAME = "book.html";
+    private static final String BOOK_FILE_NAME = "book_%s.html";
 
     public abstract Book getBookInfo(String filePath, String filesPath);
-    public abstract Observable<File> getContent(Book book, String templateHeader, String templateFooter);
+    public abstract Observable<File> getContent(Book book, String template);
 
     public static AbstractBookManager getBookManager(BookType type) {
         switch (type) {
@@ -28,8 +29,8 @@ public abstract class AbstractBookManager {
         return null;
     }
 
-    public File getBookFile(File dir) {
-        return FileUtils.concatToFile(dir.getPath(), BOOK_FILE_NAME);
+    public File getBookFile(File dir, int chapter) {
+        return FileUtils.concatToFile(dir.getPath(), String.format(BOOK_FILE_NAME, chapter));
     }
 
     public String getBody(String content) {
@@ -42,5 +43,11 @@ public abstract class AbstractBookManager {
             }
         }
         return content.substring(start, content.indexOf("</body>"));
+    }
+
+    public void modify(File bookFile, String content, String template) throws IOException {
+        content = getBody(content);
+        content = template.replace("${content}", content);
+        FileUtils.whiteFile(bookFile, content);
     }
 }
