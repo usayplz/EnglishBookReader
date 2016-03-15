@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/cover"
             android:layout_width="100dp"
-            android:layout_height="150dp"
+            android:layout_height="100dp"
             android:contentDescription="@string/app_name"
             android:scaleType="fitStart"
             android:src="@drawable/book_cover"/>

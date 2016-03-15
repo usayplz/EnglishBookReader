@@ -14,6 +14,7 @@ import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
+import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.view.BookView;
 import com.usayplz.englishbookreader.view.MenuView;
 
@@ -101,6 +102,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     @Override
     public void setPage(int page) {
+        Log.d("set page fragment");
         bookView.setPage(page);
     }
 

@@ -6,95 +6,134 @@
         @font-face { font-family: OpenSans-Regular; src: url('file:///android_asset/fonts/OpenSans-Regular.ttf');}
         @font-face { font-family: Roboto-Mono-Regular; src: url('file:///android_asset/fonts/Roboto-Mono-Regular.ttf');}
 
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
         img {
             max-width: 100% !important;
             max-height: 100% !important;
         }
 
-        body {
-            padding: 0px;
-            margin: 0px;
-            background-color: #ffffff;
-        }
-
-        p, div {
-            margin: 0px;
-            padding: 6px 0px 0px 0px;
-        }
-
-        .title {
-             font-size: 120%;
+        #container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: white;
         }
 
         #content {
-            text-align: justify;
-            padding: 0px;
-            margin: 0px;
+            position: relative;
+            margin: 32px 32px 0px 32px;
+
+            -moz-column-gap: 64px;
+            -webkit-column-gap: 64px;
+            column-gap: 64px;
+
+            font-size: 18px !important;
         }
 
-        #fill_screen {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
-            right:0;
-            bottom:0;
-            background-color: #ffffff;
+        #bottom {
+            text-align: center;
+        }
+
+        .page {
+            display: inline-block;
+            color: #999999;
+            margin: 5px 0px 5px 0px;
+            font-size: 16px;
         }
     </style>
 </head>
 
 <body>
-    <div id="fill_screen"></div>
-    <div id="content">${content}<span id="end_marker"></span></div>
+    <div id="container">
+        <div id="content">
+            ${content}
+            <span id="end_marker"></span>
+        </div>
+        <div id="bottom">
+            <span id="page" class="page"></span>
+        </div>
+    </div>
 
-    <script>
-        function init(font_family, font_size, font_color, background_color, page) {
-            $('#content').css('font-family', "'" + font_family + "'");
-            $('#content').css('font-size', font_size + 'px');
-            $('#content').css('color', font_color);
-            $('body').css('background-color', background_color);
-
-            var d = document.getElementsByTagName('body')[0];
-
-            var columnGap = 2;
-            var ourHeight = window.innerHeight;
-            var ourWidth = window.innerWidth;
-            var fullHeight = d.offsetHeight;
-            var pageCount = Math.floor(fullHeight / ourHeight) + 1;
-            var newWidth = pageCount * ourWidth;
-            d.style.height = ourHeight + 'px';
-            d.style.width = newWidth + 'px';
-            d.style.webkitColumnGap = columnGap + 'px';
-            d.style.webkitColumnCount = pageCount;
-
-            var columnCount = Math.ceil($('#end_marker').offset().left / (ourWidth + columnGap));
-
-            if (page == -1) {
-                page = columnCount;
-            }
-
-            if (page != -1000) {
-                $("body").scrollLeft(window.innerWidth * page);
-                $('#fill_screen').hide();
-            }
-            android.getPageCount(columnCount);
+    <script type="text/javascript">
+    	function setPage(i) {
+			column = i;
+        	document.getElementById('content').style.left = -1 * (column - 1) * (columnWidth + columnGap);
+        	document.getElementById('page').textContent = column + " / " + columnCount;
         }
 
-        function setPage(page) {
-            $("body").animate({scrollLeft: window.innerWidth*page});
+        var column = 1;
+    	var columnWidth = document.getElementById('content').offsetWidth;
+
+        document.getElementById('content').style.height = window.innerHeight - 64 + 'px';
+    	document.getElementById('content').style.columnWidth = columnWidth + "px";
+        document.getElementById('content').style.MozColumnWidth = columnWidth + "px";
+        document.getElementById('content').style.WebkitColumnWidth = columnWidth + "px";
+
+		var columnGap = 64;
+		var columnCount = Math.ceil($('#end_marker').offset().left / (columnWidth + columnGap));
+        var currentColumn;
+
+        currentColumn = 1;
+
+		setPage(currentColumn);
+		android.getPageCount(columnCount);
+
+        // Selection
+		function getWordAtPoint(elem, x, y) {
+            if(elem.nodeType == elem.TEXT_NODE) {
+                var range = elem.ownerDocument.createRange();
+                range.selectNodeContents(elem);
+
+                var currentPos = 0;
+                var endPos = range.endOffset;
+                while(currentPos+1 < endPos) {
+                    range.setStart(elem, currentPos);
+                    range.setEnd(elem, currentPos+1);
+                    if (range.getBoundingClientRect() == null) return null;
+                    if (range.getBoundingClientRect().left <= x && range.getBoundingClientRect().right  >= x && range.getBoundingClientRect().top  <= y && range.getBoundingClientRect().bottom >= y) {
+                        range.expand("word");
+                        this.lastNode = elem;
+                        this.lastRange = range;
+                        var ret = range.toString();
+                        range.detach();
+                        var text = elem.parentElement.textContent;
+                        return ret;
+                    }
+
+                    currentPos += 1;
+                }
+            } else {
+                for(var i = 0; i < elem.childNodes.length; i++) {
+                    var range = elem.childNodes[i].ownerDocument.createRange();
+                    range.selectNodeContents(elem.childNodes[i]);
+                    if(range.getBoundingClientRect().left <= x && range.getBoundingClientRect().right  >= x &&
+                        range.getBoundingClientRect().top  <= y && range.getBoundingClientRect().bottom >= y) {
+                        range.detach();
+                        return getWordAtPoint(elem.childNodes[i], x, y);
+                    } else {
+                        range.detach();
+                    }
+                }
+            }
+            return null;
         }
 
-        document.onclick = globalOnClickHandler;
-        function globalOnClickHandler() {
-            var s = window.getSelection();
-            s.modify('move','backward', 'word');
-            s.modify('extend','forward', 'word');
-            if (s.toString() != '') {
-                android.onTextSelected(s.toString());
+
+        function selectWord(e) {
+            var x = e.clientX;
+            var y = e.clientY;
+            var sel = getWordAtPoint(e.srcElement,x,y);
+            if (sel) {
+                sel = sel.trim();
+                alert(sel);
             }
         }
+
+        document.addEventListener("click", selectWord);
     </script>
 </body>
 </html>

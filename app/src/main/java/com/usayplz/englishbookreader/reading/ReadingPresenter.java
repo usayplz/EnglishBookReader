@@ -94,7 +94,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void previousPage() {
-        if (book.getPage() > 0 && !isLoading && getView() != null) {
+        if (book.getPage() > 1 && !isLoading && getView() != null) {
             book.setPage(book.getPage() - 1);
             getView().setPage(book.getPage());
         }

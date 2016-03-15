@@ -91,11 +91,11 @@ public class BookView extends WebView {
                 super.onPageFinished(view, url);
 
                 if (settings != null) {
-                    loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s');",
-                            settings.getFontFamily(),
-                            settings.getFontSize(),
-                            Strings.colorToRGB(settings.getFontColor()),
-                            Strings.colorToRGB(settings.getBackgroundColor()), page));
+//                    loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s');",
+//                            settings.getFontFamily(),
+//                            settings.getFontSize(),
+//                            Strings.colorToRGB(settings.getFontColor()),
+//                            Strings.colorToRGB(settings.getBackgroundColor()), page));
                 }
             }
 
@@ -109,7 +109,7 @@ public class BookView extends WebView {
         this.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onConsoleMessage(@NonNull ConsoleMessage consoleMessage) {
-                Log.d("console.log('" + consoleMessage.message() + "')");
+                Log.d("console.log: " + consoleMessage.message());
                 return super.onConsoleMessage(consoleMessage);
             }
         });
@@ -152,6 +152,7 @@ public class BookView extends WebView {
     }
 
     public void setPage(int page) {
+        Log.d("page: " + page);
         loadUrl("javascript:setPage(" + page + ")");
     }
 
