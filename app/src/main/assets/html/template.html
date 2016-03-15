@@ -20,18 +20,11 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: white;
         }
 
         #content {
             position: relative;
-            margin: 32px 32px 0px 32px;
-
-            -moz-column-gap: 64px;
-            -webkit-column-gap: 64px;
-            column-gap: 64px;
-
-            font-size: 18px !important;
+            text-align: justify;
         }
 
         #bottom {
@@ -50,8 +43,7 @@
 <body>
     <div id="container">
         <div id="content">
-            ${content}
-            <span id="end_marker"></span>
+            ${content}<span id="end_marker"></span>
         </div>
         <div id="bottom">
             <span id="page" class="page"></span>
@@ -59,80 +51,64 @@
     </div>
 
     <script type="text/javascript">
-    	function setPage(i) {
-			column = i;
-        	document.getElementById('content').style.left = -1 * (column - 1) * (columnWidth + columnGap);
-        	document.getElementById('page').textContent = column + " / " + columnCount;
+        var columnWidth;
+        var columnGap;
+        var columnCount;
+
+    	function setPage(page) {
+        	$('#content').css('left', -1 * (page - 1) * (columnWidth + columnGap));
+        	$('#page').text(page + " / " + columnCount);
         }
 
-        var column = 1;
-    	var columnWidth = document.getElementById('content').offsetWidth;
+        function init(font_family, font_size, font_color, background_color, margin, page) {
+            // settings
+            $('#container').css('font-family', "'" + font_family + "'");
+            $('#content').css('font-size', font_size + 'px !important');
+            $('#content').css('color', font_color);
+            $('#container').css('background-color', background_color);
 
-        document.getElementById('content').style.height = window.innerHeight - 64 + 'px';
-    	document.getElementById('content').style.columnWidth = columnWidth + "px";
-        document.getElementById('content').style.MozColumnWidth = columnWidth + "px";
-        document.getElementById('content').style.WebkitColumnWidth = columnWidth + "px";
+            // margin
+            columnGap = margin * 2;
+            var marginBottom = margin * 2;
+            $('#content').css({
+                'margin-top': margin + 'px',
+                'margin-left': margin + 'px',
+                'margin-right': margin + 'px',
+                'margin-bottom': '0px'
+            });
 
-		var columnGap = 64;
-		var columnCount = Math.ceil($('#end_marker').offset().left / (columnWidth + columnGap));
-        var currentColumn;
+            // column
+            $('#content').css({
+                '-webkit-column-gap': columnGap + 'px',
+                '-moz-column-gap': columnGap + 'px',
+                'column-gap': columnGap + 'px'
+            });
 
-        currentColumn = 1;
+            columnWidth = document.getElementById('content').offsetWidth;
 
-		setPage(currentColumn);
-		android.getPageCount(columnCount);
+            $('#content').css({
+                'height': window.innerHeight - marginBottom + 'px',
+                '-webkit-column-width': columnWidth + 'px',
+                '-moz-column-width': columnWidth + 'px',
+                'column-width': columnWidth + 'px'
+            });
 
-        // Selection
-		function getWordAtPoint(elem, x, y) {
-            if(elem.nodeType == elem.TEXT_NODE) {
-                var range = elem.ownerDocument.createRange();
-                range.selectNodeContents(elem);
+            columnCount = Math.ceil($('#end_marker').offset().left / (columnWidth + columnGap));
 
-                var currentPos = 0;
-                var endPos = range.endOffset;
-                while(currentPos+1 < endPos) {
-                    range.setStart(elem, currentPos);
-                    range.setEnd(elem, currentPos+1);
-                    if (range.getBoundingClientRect() == null) return null;
-                    if (range.getBoundingClientRect().left <= x && range.getBoundingClientRect().right  >= x && range.getBoundingClientRect().top  <= y && range.getBoundingClientRect().bottom >= y) {
-                        range.expand("word");
-                        this.lastNode = elem;
-                        this.lastRange = range;
-                        var ret = range.toString();
-                        range.detach();
-                        var text = elem.parentElement.textContent;
-                        return ret;
-                    }
+            setPage(page);
+            android.setPageCount(columnCount);
+        }
 
-                    currentPos += 1;
-                }
-            } else {
-                for(var i = 0; i < elem.childNodes.length; i++) {
-                    var range = elem.childNodes[i].ownerDocument.createRange();
-                    range.selectNodeContents(elem.childNodes[i]);
-                    if(range.getBoundingClientRect().left <= x && range.getBoundingClientRect().right  >= x &&
-                        range.getBoundingClientRect().top  <= y && range.getBoundingClientRect().bottom >= y) {
-                        range.detach();
-                        return getWordAtPoint(elem.childNodes[i], x, y);
-                    } else {
-                        range.detach();
-                    }
-                }
+        // selection
+        function selectWord(event) {
+            var s = window.getSelection();
+            s.modify('move','backward', 'word');
+            s.modify('extend','forward', 'word');
+            if (s.toString() != '') {
+                android.onTextSelected(s.toString());
             }
-            return null;
+            s.modify('move','forward', 'character');
         }
-
-
-        function selectWord(e) {
-            var x = e.clientX;
-            var y = e.clientY;
-            var sel = getWordAtPoint(e.srcElement,x,y);
-            if (sel) {
-                sel = sel.trim();
-                alert(sel);
-            }
-        }
-
         document.addEventListener("click", selectWord);
     </script>
 </body>

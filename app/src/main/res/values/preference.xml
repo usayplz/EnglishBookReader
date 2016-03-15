@@ -2,7 +2,7 @@
 <resources>
     <string name="pref_nightmode">pref_nightmode</string>
 
-    <string name="pref_margin_default">50</string>
+    <string name="pref_margin_default">30</string>
 
     <string name="pref_margin_top_title">Margin top</string>
     <string name="pref_margin_top">pref_margin_top</string>

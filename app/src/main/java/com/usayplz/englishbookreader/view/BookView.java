@@ -58,7 +58,12 @@ public class BookView extends WebView {
         this.addJavascriptInterface(this, "android");
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
-        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+//        String ua = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.63 Safari/537.31";
+//        webSettings.setUserAgentString(ua);
+//        webSettings.setUseWideViewPort(true);
+//        webSettings.setLoadWithOverviewMode(true);
 
         webSettings.setDefaultTextEncodingName("utf-8");
         webSettings.setJavaScriptEnabled(true);
@@ -91,17 +96,19 @@ public class BookView extends WebView {
                 super.onPageFinished(view, url);
 
                 if (settings != null) {
-//                    loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s');",
-//                            settings.getFontFamily(),
-//                            settings.getFontSize(),
-//                            Strings.colorToRGB(settings.getFontColor()),
-//                            Strings.colorToRGB(settings.getBackgroundColor()), page));
+                    loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s', '%s');",
+                            settings.getFontFamily(),
+                            settings.getFontSize(),
+                            Strings.colorToRGB(settings.getFontColor()),
+                            Strings.colorToRGB(settings.getBackgroundColor()),
+                            settings.getMarginBottom(),
+                            page));
                 }
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return super.shouldOverrideUrlLoading(view, url);
+                return false;
             }
         });
 
@@ -152,7 +159,6 @@ public class BookView extends WebView {
     }
 
     public void setPage(int page) {
-        Log.d("page: " + page);
         loadUrl("javascript:setPage(" + page + ")");
     }
 
@@ -162,16 +168,12 @@ public class BookView extends WebView {
     }
 
     @JavascriptInterface
-    public void getPageCount(String pageCount) {
+    public void setPageCount(String pageCount) {
         if (listener != null) listener.onGetPageCount(Integer.parseInt(pageCount));
     }
 
     public void setListener(EBookListener listener) {
         this.listener = listener;
-    }
-
-    public void setNightmode(int font_color, int background_color) {
-        loadUrl(String.format("javascript:nightmode('%s', '%s');", Strings.colorToRGB(font_color), Strings.colorToRGB(background_color)));
     }
 
     public interface EBookListener {
