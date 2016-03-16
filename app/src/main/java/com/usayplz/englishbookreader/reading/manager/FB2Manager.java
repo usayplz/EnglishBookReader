@@ -13,7 +13,6 @@ import rx.Observable;
  * u.sayplz@gmail.com
  */
 public class FB2Manager extends AbstractBookManager {
-
     @Override
     public Book getBookInfo(String filePath, String dirPath) {
         return null;
@@ -27,5 +26,10 @@ public class FB2Manager extends AbstractBookManager {
     @Override
     public List<Chapter> getChapters(String filePath) {
         return null;
+    }
+
+    @Override
+    public boolean isReady(Book book) {
+        return false;
     }
 }

@@ -37,6 +37,7 @@ public class EpubManager extends AbstractBookManager {
             String authors = TextUtils.join(", ", epubBook.getMetadata().getAuthors());
             book.setAuthor(authors);
             book.setTitle(epubBook.getTitle());
+            book.setLastChapter(epubBook.getContents().size() - 1);
         } catch (Exception e) {
             return null;
         }
@@ -50,20 +51,21 @@ public class EpubManager extends AbstractBookManager {
             try {
                 File file = new File(book.getFile());
                 File dir = new File(book.getDir());
-                if (!dir.exists()) {
-                    FileUtils.unzip(file, dir);
-                }
 
-                File bookFile = getBookFile(dir, 1);
+                File bookFile = getBookFile(dir, book.getChapter());
                 // TODO UNCOMMENT
 //                if (bookFile.exists()) {
 //                    return Observable.just(bookFile);
 //                }
 
+                if (!isReady(book)) {
+                    FileUtils.unzip(file, dir);
+                }
+
                 nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(book.getFile()));
                 for (int chapter = 0; chapter < epubBook.getContents().size(); chapter++) {
                     String content = new String(epubBook.getContents().get(chapter).getData());
-                    modify(getBookFile(dir, chapter), content, template);
+                    createContent(getBookFile(dir, chapter), content, template);
                 }
 
                 if (bookFile.exists()) {
@@ -82,11 +84,16 @@ public class EpubManager extends AbstractBookManager {
         try {
             nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(filePath));
             List<Chapter> chapters = new ArrayList<>();
-            logTableOfContents(chapters, epubBook.getTableOfContents().getTocReferences(), 0, 1);
+            logTableOfContents(chapters, epubBook.getTableOfContents().getTocReferences(), 0, 0);
             return chapters;
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public boolean isReady(Book book) {
+        return new File(book.getDir()).exists();
     }
 
     private Observable<File> error() {

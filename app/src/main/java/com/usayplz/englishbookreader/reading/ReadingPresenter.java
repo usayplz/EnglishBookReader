@@ -32,11 +32,14 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void getContent() {
         if (getView() != null) {
-            getView().showLoading(R.string.progress_loading_book);
             this.isLoading = true; // false in setPageCount
 
             // Init classes
             initialize();
+
+            if (!bookManager.isReady(book)) {
+                getView().showLoading(R.string.progress_loading_book);
+            }
 
             String template = FileUtils.loadAsset(getView().getContext(), BOOK_TEMPLATE);
             bookManager
@@ -44,14 +47,13 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(file -> {
-                                this.isLoading = false;
                                 if (getView() != null) {
-                                    getView().hideLoading();
                                     getView().showContent(file, settings, book.getPage());
                                 }
                             },
                             throwable -> {
                                 if (getView() != null) {
+                                    getView().hideLoading();
                                     getView().showError(R.string.error_open_book);
                                 }
                             }
@@ -100,22 +102,37 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void nextPage() {
-        if (book.getPage() < book.getLastPage() && !isLoading && getView() != null) {
+        if (isLoading || getView() == null) return;
+
+        if (book.getPage() < book.getLastPage()) {
             book.setPage(book.getPage() + 1);
             getView().setPage(book.getPage());
+        } else if (book.getChapter() < book.getLastChapter()) {
+            book.setChapter(book.getChapter() + 1);
+            book.setPage(Book.FIRST_PAGE);
+            getContent();
         }
     }
 
     public void previousPage() {
-        if (book.getPage() > Book.FIRST_PAGE && !isLoading && getView() != null) {
+        if (isLoading || getView() == null) return;
+
+        if (book.getPage() > Book.FIRST_PAGE) {
             book.setPage(book.getPage() - 1);
             getView().setPage(book.getPage());
+        } else if (book.getChapter() > 0) {
+            book.setChapter(book.getChapter() - 1);
+            book.setPage(Book.LAST_PAGE);
+            getContent();
         }
     }
 
     public void setPageCount(int lastPage) {
         this.isLoading = false;
         book.setLastPage(lastPage);
+        if (book.getPage() == Book.LAST_PAGE) {
+            book.setPage(lastPage);
+        }
 
         if (getView() != null) {
             getView().hideLoading();
@@ -128,7 +145,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         }
     }
 
-    public void createChapter() {
+    public void createMenuChapters() {
         if (getView() != null) {
             initialize();
             getView().showChapters(book.getChapter(), bookManager.getChapters(book.getFile()));

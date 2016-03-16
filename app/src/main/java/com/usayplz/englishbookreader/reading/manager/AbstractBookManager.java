@@ -21,6 +21,7 @@ public abstract class AbstractBookManager {
     public abstract Book getBookInfo(String filePath, String dirPath);
     public abstract Observable<File> getContent(Book book, String template);
     public abstract List<Chapter> getChapters(String filePath);
+    public abstract boolean isReady(Book book);
 
     public static AbstractBookManager getBookManager(BookType type) {
         switch (type) {
@@ -48,9 +49,9 @@ public abstract class AbstractBookManager {
         return content.substring(start, content.indexOf("</body>"));
     }
 
-    public void modify(File bookFile, String content, String template) throws IOException {
+    public void createContent(File bookFile, String content, String template) throws IOException {
         content = getBody(content);
         content = template.replace("${content}", content);
-        FileUtils.whiteFile(bookFile, content);
+        FileUtils.write(bookFile, content);
     }
 }

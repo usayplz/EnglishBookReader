@@ -81,7 +81,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
                 switch (readingMenuItem) {
                     case CHAPTER:
-                        presenter.createChapter();
+                        presenter.createMenuChapters();
                         break;
                     case SETTINGS:
                         Intent intent = new Intent(getActivity(), PreferencesActivity.class);

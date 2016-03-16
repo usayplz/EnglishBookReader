@@ -16,6 +16,7 @@ import rx.functions.Func1;
 
 public class Book implements Serializable {
     public static final int FIRST_PAGE = 1;
+    public static final int LAST_PAGE = -1;
 
     public static final String TABLE = "book";
     public static final String COL_ID = "_id";
@@ -28,6 +29,7 @@ public class Book implements Serializable {
     public static final String COL_PAGE = "page";
     public static final String COL_CHAPTER = "chapter";
     public static final String COL_LASTPAGE = "last_page";
+    public static final String COL_LASTCHAPTER = "last_chapter";
 
     public static final String CREATE_TABLE = ""
             + "CREATE TABLE " + TABLE + "("
@@ -40,7 +42,8 @@ public class Book implements Serializable {
             + COL_COVERIMAGE + " TEXT,"
             + COL_PAGE + " INTEGER,"
             + COL_CHAPTER + " INTEGER,"
-            + COL_LASTPAGE + " INTEGER"
+            + COL_LASTPAGE + " INTEGER,"
+            + COL_LASTCHAPTER + " INTEGER"
             + ")";
 
     private long id;
@@ -54,6 +57,7 @@ public class Book implements Serializable {
     private int page;
     private int chapter;
     private int lastPage;
+    private int lastChapter;
 
     public Book() {
     }
@@ -71,6 +75,7 @@ public class Book implements Serializable {
         book.page = Db.getInt(cursor, COL_PAGE);
         book.chapter = Db.getInt(cursor, COL_CHAPTER);
         book.lastPage = Db.getInt(cursor, COL_LASTPAGE);
+        book.lastChapter = Db.getInt(cursor, COL_LASTCHAPTER);
         return book;
     };
 
@@ -86,6 +91,7 @@ public class Book implements Serializable {
         values.put(COL_PAGE, page);
         values.put(COL_CHAPTER, chapter);
         values.put(COL_LASTPAGE, lastPage);
+        values.put(COL_LASTCHAPTER, lastChapter);
 
         return values;
     }
@@ -178,5 +184,13 @@ public class Book implements Serializable {
 
     public void setLastPage(int lastPage) {
         this.lastPage = lastPage;
+    }
+
+    public int getLastChapter() {
+        return lastChapter;
+    }
+
+    public void setLastChapter(int lastChapter) {
+        this.lastChapter = lastChapter;
     }
 }

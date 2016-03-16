@@ -95,6 +95,9 @@
 
             columnCount = Math.ceil($('#end_marker').offset().left / (columnWidth + columnGap));
 
+            if (page == -1) {
+                page = columnCount;
+            }
             setPage(page);
             android.setPageCount(columnCount);
         }

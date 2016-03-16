@@ -9,21 +9,22 @@
     <string name="error_find_books">Could not find books</string>
 
     <!-- Menu -->
+    <string name="go2page">Go to page</string>
+    <string name="change_chapter">Chapters…</string>
     <string name="settings">Settings</string>
     <string name="library">Library</string>
     <string name="exit">Exit</string>
-    <string name="nightmode">Night Mode</string>
-    <string name="add_bookmark">Add Bookmark</string>
     <string name="bookmarks">Bookmarks…</string>
+    <string name="nightmode">Night Mode</string>
 
     <!-- Progress bar -->
     <string name="progress_message">Loading…</string>
+    <string name="progress_loading_book">Loading book…</string>
 
     <!-- Defaults-->
     <string name="default_book_authors">Unknown</string>
     <string name="default_book_title">Unknown</string>
+
+    <!-- Others-->
     <string name="search">Search</string>
-    <string name="progress_loading_book">Loading book...</string>
-    <string name="go2page">Go to page</string>
-    <string name="change_chapter">Chapter...</string>
 </resources>

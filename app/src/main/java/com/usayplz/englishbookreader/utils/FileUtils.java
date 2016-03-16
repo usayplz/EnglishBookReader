@@ -72,7 +72,7 @@ public class FileUtils {
         }
     }
 
-    public static void whiteFile(File file, String content) throws IOException {
+    public static void write(File file, String content) throws IOException {
         FileWriter writer = new FileWriter(file);
         writer.write(content);
         writer.flush();
