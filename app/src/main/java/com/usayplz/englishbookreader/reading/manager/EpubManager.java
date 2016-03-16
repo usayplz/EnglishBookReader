@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.siegmann.epublib.domain.Spine;
 import nl.siegmann.epublib.domain.TOCReference;
 import nl.siegmann.epublib.epub.EpubReader;
 import rx.Observable;
@@ -83,8 +84,9 @@ public class EpubManager extends AbstractBookManager {
     public List<Chapter> getChapters(String filePath) {
         try {
             nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(filePath));
+
             List<Chapter> chapters = new ArrayList<>();
-            logTableOfContents(chapters, epubBook.getTableOfContents().getTocReferences(), 0, 0);
+            getTableOfContents(epubBook.getSpine(), chapters, epubBook.getTableOfContents().getTocReferences(), 0);
             return chapters;
         } catch (Exception e) {
             return null;
@@ -101,7 +103,7 @@ public class EpubManager extends AbstractBookManager {
         return null;
     }
 
-    private void logTableOfContents(List<Chapter> chapters, List<TOCReference> tocReferences, int depth, int next) {
+    private void getTableOfContents(Spine spine, List<Chapter> chapters, List<TOCReference> tocReferences, int depth) {
         if (tocReferences == null) {
             return;
         }
@@ -112,9 +114,11 @@ public class EpubManager extends AbstractBookManager {
                 tocString.append("\t");
             }
             tocString.append(tocReference.getTitle());
-            chapters.add(new Chapter(next, tocString.toString()));
-            next++;
-            logTableOfContents(chapters, tocReference.getChildren(), depth + 1, next);
+            int resId = spine.findFirstResourceById(tocReference.getResourceId());
+
+            chapters.add(new Chapter(resId, tocString.toString()));
+
+            getTableOfContents(spine, chapters, tocReference.getChildren(), depth + 1);
         }
     }
 }

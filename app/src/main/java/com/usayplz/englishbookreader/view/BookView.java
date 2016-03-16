@@ -168,8 +168,8 @@ public class BookView extends WebView {
     }
 
     @JavascriptInterface
-    public void setPageCount(String pageCount) {
-        if (listener != null) listener.onGetPageCount(Integer.parseInt(pageCount));
+    public void onSetPageCount(String pageCount) {
+        if (listener != null) listener.onSetPageCount(Integer.parseInt(pageCount));
     }
 
     @JavascriptInterface
@@ -188,7 +188,7 @@ public class BookView extends WebView {
 
         void onPrevious();
 
-        void onGetPageCount(int pagecount);
+        void onSetPageCount(int pagecount);
 
         void onMenuClicked();
     }

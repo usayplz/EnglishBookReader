@@ -31,22 +31,31 @@
             text-align: center;
         }
 
-        .page {
+        #page {
             display: inline-block;
             color: #999999;
             margin: 5px 0px 5px 0px;
             font-size: 16px;
         }
+
+        #hider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 
 <body>
+    <div id="hider"></div>
     <div id="container">
         <div id="content">
             ${content}<span id="end_marker"></span>
         </div>
         <div id="bottom">
-            <span id="page" class="page"></span>
+            <span id="page"></span>
         </div>
     </div>
 
@@ -61,6 +70,8 @@
         }
 
         function init(font_family, font_size, font_color, background_color, margin, page) {
+            $('#hider').css('background-color', background_color);
+
             // settings
             $('#container').css('font-family', "'" + font_family + "'");
             $('#content').css('font-size', font_size + 'px !important');
@@ -99,7 +110,8 @@
                 page = columnCount;
             }
             setPage(page);
-            android.setPageCount(columnCount);
+            android.onSetPageCount(columnCount);
+            $('#hider').hide();
         }
 
         // selection

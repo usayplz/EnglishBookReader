@@ -15,7 +15,6 @@ import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
-import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.view.BookView;
 import com.usayplz.englishbookreader.view.ChapterView;
 import com.usayplz.englishbookreader.view.MenuView;
@@ -36,6 +35,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     private ReadingPresenter presenter;
     private MenuView menuView;
+    private boolean bugFixLessV19 = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,18 +104,17 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     }
 
     @Override
-    public void showChapters(int chapter, List<Chapter> chapters) {
-        new ChapterView().show(getActivity().getSupportFragmentManager(), chapter, chapters, new ChapterView.IChapterListener() {
-            @Override
-            public void onChapterChanged(Chapter chapter1) {
-                Log.d("chapter: " + chapter);
-                presenter.getContent(chapter1);
-            }
-        });
+    public void showChapters(int currentChapter, List<Chapter> chapters) {
+        new ChapterView()
+                .show(getActivity().getSupportFragmentManager(), currentChapter, chapters, presenter::getContent);
     }
 
     @Override
     public void showContent(File content, Settings settings, int page) {
+        if (bugFixLessV19) {
+            presenter.getContent();
+            bugFixLessV19 = false;
+        }
         getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
 
     }
@@ -141,8 +140,10 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     }
 
     @Override
-    public void onGetPageCount(int pagecount) {
-        presenter.setPageCount(pagecount);
+    public void onSetPageCount(int pagecount) {
+        if (!bugFixLessV19) {
+            presenter.setPageCount(pagecount);
+        }
     }
 
     @Override
