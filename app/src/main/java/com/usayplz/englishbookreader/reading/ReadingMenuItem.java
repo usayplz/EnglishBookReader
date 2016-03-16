@@ -7,9 +7,10 @@ import com.usayplz.englishbookreader.R;
  * u.sayplz@gmail.com
  */
 public enum ReadingMenuItem {
-    SETTINGS(0, R.drawable.ic_settings, R.string.settings),
+    CHAPTER(0, R.drawable.ic_chapter, R.string.change_chapter),
+    SETTINGS(5, R.drawable.ic_settings, R.string.settings),
     LIBRARY(10, R.drawable.ic_library, R.string.library),
-    // NIGHTMODE(20, R.drawable.ic_nightmode, R.string.nightmode),
+     NIGHTMODE(20, R.drawable.ic_nightmode, R.string.nightmode),
     // ADDBOOKMARK(30, R.drawable.ic_more_horiz, R.string.add_bookmark),
     // BOOKMARKS(40, R.drawable.ic_more_horiz, R.string.bookmarks),
     EXIT(50, R.drawable.ic_exit, R.string.exit);

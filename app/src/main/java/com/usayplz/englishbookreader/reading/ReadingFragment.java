@@ -69,12 +69,16 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
                 if (readingMenuItem == null) return;
 
                 switch (readingMenuItem) {
+                    case CHAPTER:
+                        break;
                     case SETTINGS:
                         Intent intent = new Intent(getActivity(), PreferencesActivity.class);
                         startActivityForResult(intent, PreferencesActivity.SETTINGS_CHANGED_REQUEST);
                         break;
                     case LIBRARY:
                         startActivity(new Intent(getActivity(), LibraryActivity.class));
+                        break;
+                    case NIGHTMODE:
                         break;
                     case EXIT:
                         getActivity().finish();
@@ -122,6 +126,11 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     @Override
     public void onGetPageCount(int pagecount) {
         presenter.setPageCount(pagecount);
+    }
+
+    @Override
+    public void onMenuClicked() {
+        presenter.createMenu();
     }
 
     @Override

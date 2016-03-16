@@ -101,7 +101,7 @@ public class BookView extends WebView {
                             settings.getFontSize(),
                             Strings.colorToRGB(settings.getFontColor()),
                             Strings.colorToRGB(settings.getBackgroundColor()),
-                            settings.getMarginBottom(),
+                            settings.getMargin(),
                             page));
                 }
             }
@@ -172,6 +172,11 @@ public class BookView extends WebView {
         if (listener != null) listener.onGetPageCount(Integer.parseInt(pageCount));
     }
 
+    @JavascriptInterface
+    public void onMenuClicked() {
+        if (listener != null) listener.onMenuClicked();
+    }
+
     public void setListener(EBookListener listener) {
         this.listener = listener;
     }
@@ -184,5 +189,7 @@ public class BookView extends WebView {
         void onPrevious();
 
         void onGetPageCount(int pagecount);
+
+        void onMenuClicked();
     }
 }

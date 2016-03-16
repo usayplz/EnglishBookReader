@@ -27,10 +27,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
         isChanged = false;
         findPreference(getString(R.string.pref_font_size)).setOnPreferenceChangeListener(this);
-        findPreference(getString(R.string.pref_margin_top)).setOnPreferenceChangeListener(this);
-        findPreference(getString(R.string.pref_margin_bottom)).setOnPreferenceChangeListener(this);
-        findPreference(getString(R.string.pref_margin_left)).setOnPreferenceChangeListener(this);
-        findPreference(getString(R.string.pref_margin_right)).setOnPreferenceChangeListener(this);
+        findPreference(getString(R.string.pref_margin)).setOnPreferenceChangeListener(this);
         initSummary(getPreferenceScreen());
     }
 
@@ -95,13 +92,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
         }
 
-        if (preference.getKey().equals(getString(R.string.pref_margin_top))
-                || preference.getKey().equals(getString(R.string.pref_margin_bottom))
-                || preference.getKey().equals(getString(R.string.pref_margin_left))
-                || preference.getKey().equals(getString(R.string.pref_margin_right))) {
+        if (preference.getKey().equals(getString(R.string.pref_margin))) {
             try {
                 int newIntValue = Integer.valueOf(newValue.toString());
-                if (newIntValue < 10 || newIntValue > 100) {
+                if (newIntValue < 20 || newIntValue > 50) {
                     Toast.makeText(this, R.string.error_limit_margin, Toast.LENGTH_SHORT).show();
                     return false;
                 }

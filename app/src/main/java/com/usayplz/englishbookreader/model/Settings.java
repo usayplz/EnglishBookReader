@@ -10,10 +10,7 @@ public class Settings implements Serializable {
     private String fontFamily;
     private Integer fontSize;
     private String language;
-    private Integer MarginTop;
-    private Integer MarginBottom;
-    private Integer MarginLeft;
-    private Integer MarginRight;
+    private Integer margin;
     private Integer backgroundColor;
     private Integer fontColor;
     private Boolean nightmode;
@@ -47,36 +44,12 @@ public class Settings implements Serializable {
         this.language = language;
     }
 
-    public Integer getMarginTop() {
-        return MarginTop;
+    public Integer getMargin() {
+        return margin;
     }
 
-    public void setMarginTop(Integer marginTop) {
-        MarginTop = marginTop;
-    }
-
-    public Integer getMarginBottom() {
-        return MarginBottom;
-    }
-
-    public void setMarginBottom(Integer marginBottom) {
-        MarginBottom = marginBottom;
-    }
-
-    public Integer getMarginLeft() {
-        return MarginLeft;
-    }
-
-    public void setMarginLeft(Integer marginLeft) {
-        MarginLeft = marginLeft;
-    }
-
-    public Integer getMarginRight() {
-        return MarginRight;
-    }
-
-    public void setMarginRight(Integer marginRight) {
-        MarginRight = marginRight;
+    public void setMargin(Integer margin) {
+        this.margin = margin;
     }
 
     public Integer getBackgroundColor() {

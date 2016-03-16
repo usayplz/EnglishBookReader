@@ -69,7 +69,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void getContent(int page) {
         if (getView() != null) {
-            book.setPage(page - 1);
+            book.setPage(page);
             getView().setPage(book.getPage());
         }
     }
@@ -111,7 +111,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
     public void createMenu() {
         if (getView() != null && book.getLastPage() >= 0) {
-            getView().showMenu(book.getPage() + 1, book.getLastPage() + 1);
+            getView().showMenu(book.getPage(), book.getLastPage());
         }
     }
 }

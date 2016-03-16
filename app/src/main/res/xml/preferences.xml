@@ -19,29 +19,8 @@
 
     <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
         android:defaultValue="@string/pref_margin_default"
-        android:key="@string/pref_margin_top"
-        android:title="@string/pref_margin_top_title"
-        app:negativeButtonText="@android:string/cancel"
-        app:positiveButtonText="@android:string/ok"/>
-
-    <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
-        android:defaultValue="@string/pref_margin_default"
-        android:key="@string/pref_margin_bottom"
+        android:key="@string/pref_margin"
         android:title="@string/pref_margin_bottom_title"
-        app:negativeButtonText="@android:string/cancel"
-        app:positiveButtonText="@android:string/ok"/>
-
-    <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
-        android:defaultValue="@string/pref_margin_default"
-        android:key="@string/pref_margin_left"
-        android:title="@string/pref_margin_left_title"
-        app:negativeButtonText="@android:string/cancel"
-        app:positiveButtonText="@android:string/ok"/>
-
-    <com.lb.material_preferences_library.custom_preferences.NumberEditTextPreference
-        android:defaultValue="@string/pref_margin_default"
-        android:key="@string/pref_margin_right"
-        android:title="@string/pref_margin_right_title"
         app:negativeButtonText="@android:string/cancel"
         app:positiveButtonText="@android:string/ok"/>
 

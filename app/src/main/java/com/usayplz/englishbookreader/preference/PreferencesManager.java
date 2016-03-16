@@ -20,10 +20,7 @@ public class PreferencesManager {
         Resources res = context.getResources();
 
         Settings settings = new Settings();
-        settings.setMarginTop(Integer.valueOf(pref.getString(res.getString(R.string.pref_margin_top), res.getString(R.string.pref_margin_default))));
-        settings.setMarginBottom(Integer.valueOf(pref.getString(res.getString(R.string.pref_margin_bottom), res.getString(R.string.pref_margin_default))));
-        settings.setMarginLeft(Integer.valueOf(pref.getString(res.getString(R.string.pref_margin_left), res.getString(R.string.pref_margin_default))));
-        settings.setMarginRight(Integer.valueOf(pref.getString(res.getString(R.string.pref_margin_right), res.getString(R.string.pref_margin_default))));
+        settings.setMargin(Integer.valueOf(pref.getString(res.getString(R.string.pref_margin), res.getString(R.string.pref_margin_default))));
         settings.setFontFamily(pref.getString(res.getString(R.string.pref_font_family), res.getString(R.string.pref_font_family_default)));
         settings.setFontSize(Integer.valueOf(pref.getString(res.getString(R.string.pref_font_size), res.getString(R.string.pref_font_size_default))));
         settings.setFontColor(pref.getInt(res.getString(R.string.pref_font_color), res.getColor(R.color.day)));

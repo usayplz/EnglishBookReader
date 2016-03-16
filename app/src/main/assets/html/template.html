@@ -57,7 +57,7 @@
 
     	function setPage(page) {
         	$('#content').css('left', -1 * (page - 1) * (columnWidth + columnGap));
-        	$('#page').text(page + " / " + columnCount);
+        	$('#page').html('&equiv;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + page + " / " + columnCount + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&equiv;');
         }
 
         function init(font_family, font_size, font_color, background_color, margin, page) {
@@ -100,7 +100,7 @@
         }
 
         // selection
-        function selectWord(event) {
+        $('#content').on('click', function(event) {
             var s = window.getSelection();
             s.modify('move','backward', 'word');
             s.modify('extend','forward', 'word');
@@ -108,8 +108,12 @@
                 android.onTextSelected(s.toString());
             }
             s.modify('move','forward', 'character');
-        }
-        document.addEventListener("click", selectWord);
+        });
+
+        // menu
+        $('#bottom').on('click', function(event) {
+            android.onMenuClicked();
+        });
     </script>
 </body>
 </html>
