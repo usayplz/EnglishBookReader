@@ -4,6 +4,7 @@ import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.db.BookDao;
 import com.usayplz.englishbookreader.model.Book;
+import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
 import com.usayplz.englishbookreader.preference.UserData;
@@ -34,17 +35,8 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
             getView().showLoading(R.string.progress_loading_book);
             this.isLoading = true; // false in setPageCount
 
-            // Init objects
-            if (book == null) {
-                long id = new UserData(getView().getContext()).getBookId();
-                book = new BookDao(getView().getContext()).get(id);
-                bookManager = AbstractBookManager.getBookManager(book.getType());
-            }
-
-            if (settings == null) {
-                PreferencesManager preferencesManager = new PreferencesManager();
-                this.settings = preferencesManager.getPreferences(getView().getContext());
-            }
+            // Init classes
+            initialize();
 
             String template = FileUtils.loadAsset(getView().getContext(), BOOK_TEMPLATE);
             bookManager
@@ -67,11 +59,32 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         }
     }
 
+    private void initialize() {
+        if (getView() != null) {
+            if (book == null) {
+                long id = new UserData(getView().getContext()).getBookId();
+                book = new BookDao(getView().getContext()).get(id);
+                bookManager = AbstractBookManager.getBookManager(book.getType());
+            }
+
+            if (settings == null) {
+                PreferencesManager preferencesManager = new PreferencesManager();
+                this.settings = preferencesManager.getPreferences(getView().getContext());
+            }
+        }
+    }
+
     public void getContent(int page) {
         if (getView() != null) {
             book.setPage(page);
             getView().setPage(book.getPage());
         }
+    }
+
+    public void getContent(Chapter chapter) {
+        book.setPage(Book.FIRST_PAGE);
+        book.setChapter(chapter.getId());
+        getContent();
     }
 
     @Override
@@ -94,7 +107,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void previousPage() {
-        if (book.getPage() > 1 && !isLoading && getView() != null) {
+        if (book.getPage() > Book.FIRST_PAGE && !isLoading && getView() != null) {
             book.setPage(book.getPage() - 1);
             getView().setPage(book.getPage());
         }
@@ -112,6 +125,13 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     public void createMenu() {
         if (getView() != null && book.getLastPage() >= 0) {
             getView().showMenu(book.getPage(), book.getLastPage());
+        }
+    }
+
+    public void createChapter() {
+        if (getView() != null) {
+            initialize();
+            getView().showChapters(book.getChapter(), bookManager.getChapters(book.getFile()));
         }
     }
 

@@ -15,6 +15,8 @@ import rx.functions.Func1;
  */
 
 public class Book implements Serializable {
+    public static final int FIRST_PAGE = 1;
+
     public static final String TABLE = "book";
     public static final String COL_ID = "_id";
     public static final String COL_TYPE = "type_code";
@@ -24,6 +26,7 @@ public class Book implements Serializable {
     public static final String COL_AUTHOR = "author";
     public static final String COL_COVERIMAGE = "cover_image";
     public static final String COL_PAGE = "page";
+    public static final String COL_CHAPTER = "chapter";
     public static final String COL_LASTPAGE = "last_page";
 
     public static final String CREATE_TABLE = ""
@@ -36,6 +39,7 @@ public class Book implements Serializable {
             + COL_AUTHOR + " TEXT,"
             + COL_COVERIMAGE + " TEXT,"
             + COL_PAGE + " INTEGER,"
+            + COL_CHAPTER + " INTEGER,"
             + COL_LASTPAGE + " INTEGER"
             + ")";
 
@@ -48,6 +52,7 @@ public class Book implements Serializable {
     private String author;
     private String coverImage;
     private int page;
+    private int chapter;
     private int lastPage;
 
     public Book() {
@@ -64,6 +69,7 @@ public class Book implements Serializable {
         book.author = Db.getString(cursor, COL_AUTHOR);
         book.coverImage = Db.getString(cursor, COL_COVERIMAGE);
         book.page = Db.getInt(cursor, COL_PAGE);
+        book.chapter = Db.getInt(cursor, COL_CHAPTER);
         book.lastPage = Db.getInt(cursor, COL_LASTPAGE);
         return book;
     };
@@ -78,6 +84,7 @@ public class Book implements Serializable {
         values.put(COL_AUTHOR, author);
         values.put(COL_COVERIMAGE, coverImage);
         values.put(COL_PAGE, page);
+        values.put(COL_CHAPTER, chapter);
         values.put(COL_LASTPAGE, lastPage);
 
         return values;
@@ -155,6 +162,14 @@ public class Book implements Serializable {
 
     public void setPage(int page) {
         this.page = page;
+    }
+
+    public int getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(int chapter) {
+        this.chapter = chapter;
     }
 
     public int getLastPage() {

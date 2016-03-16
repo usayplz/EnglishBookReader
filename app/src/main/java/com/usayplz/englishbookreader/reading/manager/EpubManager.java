@@ -4,12 +4,16 @@ import android.text.TextUtils;
 
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookType;
+import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import nl.siegmann.epublib.domain.TOCReference;
 import nl.siegmann.epublib.epub.EpubReader;
 import rx.Observable;
 
@@ -19,12 +23,12 @@ import rx.Observable;
  */
 public class EpubManager extends AbstractBookManager {
     @Override
-    public Book getBookInfo(String filePath, String filesPath) {
+    public Book getBookInfo(String filePath, String dirPath) {
         File file = new File(filePath);
-        File dir = FileUtils.concatToFile(filesPath, file.getName() + file.length());
+        File dir = FileUtils.concatToFile(dirPath, file.getName() + file.length());
         Book book = new Book();
         book.setType(BookType.EPUB);
-        book.setPage(1);
+        book.setPage(Book.FIRST_PAGE);
         book.setFile(filePath);
         book.setDir(dir.getPath());
 
@@ -73,8 +77,37 @@ public class EpubManager extends AbstractBookManager {
         });
     }
 
+    @Override
+    public List<Chapter> getChapters(String filePath) {
+        try {
+            nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(filePath));
+            List<Chapter> chapters = new ArrayList<>();
+            logTableOfContents(chapters, epubBook.getTableOfContents().getTocReferences(), 0, 1);
+            return chapters;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private Observable<File> error() {
         Observable.error(new Exception("Cannot create file"));
         return null;
+    }
+
+    private void logTableOfContents(List<Chapter> chapters, List<TOCReference> tocReferences, int depth, int next) {
+        if (tocReferences == null) {
+            return;
+        }
+
+        for (TOCReference tocReference : tocReferences) {
+            StringBuilder tocString = new StringBuilder();
+            for (int i = 0; i < depth; i++) {
+                tocString.append("\t");
+            }
+            tocString.append(tocReference.getTitle());
+            chapters.add(new Chapter(next, tocString.toString()));
+            next++;
+            logTableOfContents(chapters, tocReference.getChildren(), depth + 1, next);
+        }
     }
 }

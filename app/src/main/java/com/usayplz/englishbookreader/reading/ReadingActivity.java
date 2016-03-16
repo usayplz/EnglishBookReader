@@ -2,6 +2,7 @@ package com.usayplz.englishbookreader.reading;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseActivity;
@@ -18,11 +19,15 @@ public class ReadingActivity extends BaseActivity {
         // Check book is opened
         long bookId = new UserData(this).getBookId();
         if (bookId > 0) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, new ReadingFragment()).commit();
+            setFragment(new ReadingFragment());
         } else {
             Intent intent = new Intent(this, LibraryActivity.class);
             startActivity(intent);
             finish();
         }
+    }
+
+    public void setFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 }

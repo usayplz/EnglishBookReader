@@ -27,16 +27,16 @@ import com.usayplz.englishbookreader.reading.ReadingMenuItem;
  * u.sayplz@gmail.com
  */
 public class MenuView extends DialogFragment {
-    private static final String TAG = "menu_view";
+    private static final String TAG = MenuView.class.getName();
 
-    private IMenuView listener;
+    private IMenuListener listener;
     private int page;
     private int maxPage;
 
     public MenuView() {
     }
 
-    public void show(FragmentManager manager, int page, int maxPage, IMenuView listener) {
+    public void show(FragmentManager manager, int page, int maxPage, IMenuListener listener) {
         super.show(manager, TAG);
         this.page = page;
         this.maxPage = maxPage;
@@ -138,7 +138,7 @@ public class MenuView extends DialogFragment {
         TextView name;
     }
 
-    public interface IMenuView {
+    public interface IMenuListener {
         void onPageChanged(int page);
         void onMenuItemClicked(int id);
     }

@@ -12,12 +12,16 @@ import android.widget.Toast;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
+import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
+import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.view.BookView;
+import com.usayplz.englishbookreader.view.ChapterView;
 import com.usayplz.englishbookreader.view.MenuView;
 
 import java.io.File;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,7 +31,7 @@ import butterknife.ButterKnife;
  * u.sayplz@gmail.com
  */
 
-public class ReadingFragment extends BaseFragment implements ReadingView, BookView.EBookListener {
+public class ReadingFragment extends BaseFragment implements ReadingView, BookView.IBookListener {
     @Bind(R.id.book) BookView bookView;
 
     private ReadingPresenter presenter;
@@ -53,11 +57,18 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+        presenter.detachView();
+    }
+
+    @Override
     public void showMenu(int page, int maxPage) {
         if (menuView == null) {
             menuView = new MenuView();
         }
-        menuView.show(getActivity().getSupportFragmentManager(), page, maxPage, new MenuView.IMenuView() {
+        menuView.show(getActivity().getSupportFragmentManager(), page, maxPage, new MenuView.IMenuListener() {
             @Override
             public void onPageChanged(int page) {
                 presenter.getContent(page);
@@ -70,6 +81,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
                 switch (readingMenuItem) {
                     case CHAPTER:
+                        presenter.createChapter();
                         break;
                     case SETTINGS:
                         Intent intent = new Intent(getActivity(), PreferencesActivity.class);
@@ -92,16 +104,20 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     }
 
     @Override
-    public void showContent(File content, Settings settings, int page) {
-        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
-
+    public void showChapters(int chapter, List<Chapter> chapters) {
+        new ChapterView().show(getActivity().getSupportFragmentManager(), chapter, chapters, new ChapterView.IChapterListener() {
+            @Override
+            public void onChapterChanged(Chapter chapter1) {
+                Log.d("chapter: " + chapter);
+                presenter.getContent(chapter1);
+            }
+        });
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-        presenter.detachView();
+    public void showContent(File content, Settings settings, int page) {
+        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
+
     }
 
     @Override

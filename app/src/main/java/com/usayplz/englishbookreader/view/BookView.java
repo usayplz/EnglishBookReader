@@ -31,7 +31,7 @@ public class BookView extends WebView {
     private float posX;
     private float posY;
     private boolean isSwiping;
-    private EBookListener listener;
+    private IBookListener listener;
     private Settings settings;
     private int page;
 
@@ -177,11 +177,11 @@ public class BookView extends WebView {
         if (listener != null) listener.onMenuClicked();
     }
 
-    public void setListener(EBookListener listener) {
+    public void setListener(IBookListener listener) {
         this.listener = listener;
     }
 
-    public interface EBookListener {
+    public interface IBookListener {
         void onTextSelected(String word);
 
         void onNext();
