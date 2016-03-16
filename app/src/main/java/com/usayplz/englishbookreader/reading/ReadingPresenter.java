@@ -114,4 +114,13 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
             getView().showMenu(book.getPage(), book.getLastPage());
         }
     }
+
+    public void switchNightmode() {
+        if (getView() != null) {
+            PreferencesManager preferencesManager = new PreferencesManager();
+            preferencesManager.switchNightmode(getView().getContext());
+            this.settings = preferencesManager.getPreferences(getView().getContext());
+            getContent();
+        }
+    }
 }

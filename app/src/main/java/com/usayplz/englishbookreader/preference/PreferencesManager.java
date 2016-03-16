@@ -30,7 +30,7 @@ public class PreferencesManager {
         return settings;
     }
 
-    public void changeNightmode(Context context) {
+    public void switchNightmode(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(BookApplication.get(context));
         Resources res = context.getResources();
 

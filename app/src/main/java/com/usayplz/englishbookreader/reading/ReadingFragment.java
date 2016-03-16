@@ -79,6 +79,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
                         startActivity(new Intent(getActivity(), LibraryActivity.class));
                         break;
                     case NIGHTMODE:
+                        presenter.switchNightmode();
                         break;
                     case EXIT:
                         getActivity().finish();
