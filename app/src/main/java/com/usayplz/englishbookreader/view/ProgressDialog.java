@@ -24,6 +24,7 @@ public class ProgressDialog extends DialogFragment {
     public void show(FragmentManager manager, String message) {
         super.show(manager, TAG);
         this.message = message;
+        this.setCancelable(false);
     }
 
     @NonNull
