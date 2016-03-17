@@ -99,15 +99,20 @@
 
             columnCount = Math.ceil($('#end_marker').offset().left / (columnWidth + columnGap));
 
-            if (page == -1) {
+            if (page == -1) { // previous chapter set last page
                 page = columnCount;
             }
-
-            if (page != -2) {
-                setPage(page);
-                android.onSetPageCount(columnCount);
-                $('body').css('visibility', 'visible');
+            if (page == -2) { // bug fix
+                return;
             }
+            if (page == -3) { // counting page
+                android.onSetPageCount(columnCount);
+                return;
+            }
+
+            setPage(page);
+            android.onSetPageCount(columnCount);
+            $('body').css('visibility', 'visible');
         }
 
         // selection
