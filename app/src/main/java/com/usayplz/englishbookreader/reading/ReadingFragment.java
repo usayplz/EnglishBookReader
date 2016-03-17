@@ -113,12 +113,10 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     @Override
     public void showContent(File content, Settings settings, int page) {
+        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, bugFixLessV19 ? -2: page));
         if (bugFixLessV19) {
-            presenter.getContent();
             bugFixLessV19 = false;
-            getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, -2));
-        } else {
-            getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
+            presenter.getContent();
         }
     }
 
