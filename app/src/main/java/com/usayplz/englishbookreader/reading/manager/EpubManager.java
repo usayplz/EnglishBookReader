@@ -4,17 +4,12 @@ import android.text.TextUtils;
 
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookType;
-import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import nl.siegmann.epublib.domain.Spine;
-import nl.siegmann.epublib.domain.TOCReference;
 import nl.siegmann.epublib.epub.EpubReader;
 import rx.Observable;
 
@@ -30,6 +25,7 @@ public class EpubManager extends AbstractBookManager {
         Book book = new Book();
         book.setType(BookType.EPUB);
         book.setPage(Book.FIRST_PAGE);
+        book.setLastPage(0);
         book.setFile(filePath);
         book.setDir(dir.getPath());
 
@@ -81,19 +77,6 @@ public class EpubManager extends AbstractBookManager {
     }
 
     @Override
-    public List<Chapter> getChapters(String filePath) {
-        try {
-            nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(filePath));
-
-            List<Chapter> chapters = new ArrayList<>();
-            getTableOfContents(epubBook.getSpine(), chapters, epubBook.getTableOfContents().getTocReferences(), 0);
-            return chapters;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Override
     public boolean isReady(Book book) {
         return new File(book.getDir()).exists();
     }
@@ -101,23 +84,5 @@ public class EpubManager extends AbstractBookManager {
     private Observable<File> error() {
         Observable.error(new Exception("Cannot create file"));
         return null;
-    }
-
-    private void getTableOfContents(Spine spine, List<Chapter> chapters, List<TOCReference> tocReferences, int depth) {
-        if (tocReferences == null) {
-            return;
-        }
-
-        for (TOCReference tocReference : tocReferences) {
-            StringBuilder tocString = new StringBuilder();
-            for (int i = 0; i < depth; i++) {
-                tocString.append("\t");
-            }
-            tocString.append(tocReference.getTitle());
-            int resId = spine.findFirstResourceById(tocReference.getResourceId());
-            chapters.add(new Chapter(resId, tocString.toString()));
-
-            getTableOfContents(spine, chapters, tocReference.getChildren(), depth + 1);
-        }
     }
 }

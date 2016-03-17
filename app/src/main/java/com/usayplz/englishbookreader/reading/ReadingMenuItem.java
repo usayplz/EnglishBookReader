@@ -7,7 +7,7 @@ import com.usayplz.englishbookreader.R;
  * u.sayplz@gmail.com
  */
 public enum ReadingMenuItem {
-    CHAPTER(0, R.drawable.ic_chapter, R.string.change_chapter),
+//    CHAPTER(0, R.drawable.ic_chapter, R.string.change_chapter),
     SETTINGS(10, R.drawable.ic_settings, R.string.settings),
     LIBRARY(20, R.drawable.ic_library, R.string.library),
      NIGHTMODE(30, R.drawable.ic_nightmode, R.string.nightmode),

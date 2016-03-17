@@ -4,7 +4,6 @@ import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.db.BookDao;
 import com.usayplz.englishbookreader.model.Book;
-import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
 import com.usayplz.englishbookreader.preference.UserData;
@@ -69,10 +68,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
                 bookManager = AbstractBookManager.getBookManager(book.getType());
             }
 
-            if (settings == null) {
-                PreferencesManager preferencesManager = new PreferencesManager();
-                this.settings = preferencesManager.getPreferences(getView().getContext());
-            }
+            this.settings = new PreferencesManager().getPreferences(getView().getContext());
         }
     }
 
@@ -81,12 +77,6 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
             book.setPage(page);
             getView().setPage(book.getPage());
         }
-    }
-
-    public void getContent(Chapter chapter) {
-        book.setPage(Book.FIRST_PAGE);
-        book.setChapter(chapter.getId());
-        getContent();
     }
 
     @Override
@@ -142,13 +132,6 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     public void createMenu() {
         if (getView() != null && book.getLastPage() >= 0) {
             getView().showMenu(book.getPage(), book.getLastPage());
-        }
-    }
-
-    public void createMenuChapters() {
-        if (getView() != null) {
-            initialize();
-            getView().showChapters(book.getChapter(), bookManager.getChapters(book.getFile()));
         }
     }
 

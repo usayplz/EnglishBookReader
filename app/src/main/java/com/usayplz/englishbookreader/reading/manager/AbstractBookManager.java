@@ -2,12 +2,10 @@ package com.usayplz.englishbookreader.reading.manager;
 
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookType;
-import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import rx.Observable;
 
@@ -20,7 +18,6 @@ public abstract class AbstractBookManager {
 
     public abstract Book getBookInfo(String filePath, String dirPath);
     public abstract Observable<File> getContent(Book book, String template);
-    public abstract List<Chapter> getChapters(String filePath);
     public abstract boolean isReady(Book book);
 
     public static AbstractBookManager getBookManager(BookType type) {

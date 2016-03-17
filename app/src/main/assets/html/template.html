@@ -17,19 +17,27 @@
             max-height: 100% !important;
         }
 
+        p, div {
+            margin: 0px;
+            padding: 10px 0px 0px 0px;
+        }
+
         #container {
             width: 100%;
             height: 100%;
             overflow: hidden;
+            padding: 0px;
         }
 
         #content {
             position: relative;
             text-align: justify;
+            padding: 0px;
         }
 
         #bottom {
             text-align: center;
+            padding: 0px;
         }
 
         #page {
@@ -37,15 +45,15 @@
             color: #999999;
             margin: 5px 0px 5px 0px;
             font-size: 16px;
+            padding: 0px;
         }
     </style>
 </head>
 
 <body>
-    <!--<div id="hider"></div>-->
     <div id="container">
         <div id="content">
-            ${content}<span id="end_marker"></span>
+            ${content}<div id="end_marker">&nbsp;</div>
         </div>
         <div id="bottom">
             <span id="page"></span>
@@ -63,8 +71,6 @@
         }
 
         function init(font_family, font_size, font_color, background_color, margin, page) {
-            $('#hider').css('background-color', background_color);
-
             // settings
             $('#container').css('font-family', "'" + font_family + "'");
             $('#content').css('font-size', font_size + 'px !important');
@@ -98,6 +104,9 @@
             });
 
             columnCount = Math.ceil($('#end_marker').offset().left / (columnWidth + columnGap));
+            if ($('#end_marker').offset().top <= margin) { // fix if span on top of page
+                columnCount--;
+            }
 
             if (page == -1) { // previous chapter set last page
                 page = columnCount;

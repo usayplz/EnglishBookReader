@@ -12,15 +12,12 @@ import android.widget.Toast;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
-import com.usayplz.englishbookreader.model.Chapter;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
 import com.usayplz.englishbookreader.view.BookView;
-import com.usayplz.englishbookreader.view.ChapterView;
 import com.usayplz.englishbookreader.view.MenuView;
 
 import java.io.File;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -82,9 +79,6 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
                 if (readingMenuItem == null) return;
 
                 switch (readingMenuItem) {
-                    case CHAPTER:
-                        presenter.createMenuChapters();
-                        break;
                     case SETTINGS:
                         Intent intent = new Intent(getActivity(), PreferencesActivity.class);
                         startActivityForResult(intent, PreferencesActivity.SETTINGS_CHANGED_REQUEST);
@@ -103,12 +97,6 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
                 menuView.dismiss();
             }
         });
-    }
-
-    @Override
-    public void showChapters(int currentChapter, List<Chapter> chapters) {
-        new ChapterView()
-                .show(getActivity().getSupportFragmentManager(), currentChapter, chapters, presenter::getContent);
     }
 
     @Override
