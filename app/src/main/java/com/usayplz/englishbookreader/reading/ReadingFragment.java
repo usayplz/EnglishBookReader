@@ -48,6 +48,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
         ButterKnife.bind(this, view);
 
         // Views
+        menuView = new MenuView();
         bookView.setListener(this);
 
         // presenter
@@ -65,9 +66,10 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     @Override
     public void showMenu(int page, int maxPage) {
-        if (menuView == null) {
-            menuView = new MenuView();
+        if (menuView.isAdded()) {
+            menuView.dismiss();
         }
+
         menuView.show(getActivity().getSupportFragmentManager(), page, maxPage, new MenuView.IMenuListener() {
             @Override
             public void onPageChanged(int page) {
@@ -114,9 +116,10 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
         if (bugFixLessV19) {
             presenter.getContent();
             bugFixLessV19 = false;
+            getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, -2));
+        } else {
+            getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
         }
-        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, page));
-
     }
 
     @Override
@@ -141,9 +144,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     @Override
     public void onSetPageCount(int pagecount) {
-        if (!bugFixLessV19) {
-            presenter.setPageCount(pagecount);
-        }
+        presenter.setPageCount(pagecount);
     }
 
     @Override

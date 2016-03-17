@@ -58,12 +58,7 @@ public class BookView extends WebView {
         this.addJavascriptInterface(this, "android");
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
-//        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-
-//        String ua = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.63 Safari/537.31";
-//        webSettings.setUserAgentString(ua);
-//        webSettings.setUseWideViewPort(true);
-//        webSettings.setLoadWithOverviewMode(true);
+        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         webSettings.setDefaultTextEncodingName("utf-8");
         webSettings.setJavaScriptEnabled(true);
@@ -93,8 +88,6 @@ public class BookView extends WebView {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-
                 if (settings != null) {
                     loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s', '%s');",
                             settings.getFontFamily(),
@@ -104,6 +97,9 @@ public class BookView extends WebView {
                             settings.getMargin(),
                             page));
                 }
+
+
+                super.onPageFinished(view, url);
             }
 
             @Override

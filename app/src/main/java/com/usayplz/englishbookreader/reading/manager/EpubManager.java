@@ -115,7 +115,6 @@ public class EpubManager extends AbstractBookManager {
             }
             tocString.append(tocReference.getTitle());
             int resId = spine.findFirstResourceById(tocReference.getResourceId());
-
             chapters.add(new Chapter(resId, tocString.toString()));
 
             getTableOfContents(spine, chapters, tocReference.getChildren(), depth + 1);
