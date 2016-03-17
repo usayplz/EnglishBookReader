@@ -16,7 +16,6 @@ import rx.functions.Func1;
 
 public class Book implements Serializable {
     public static final int FIRST_PAGE = 1;
-    public static final int LAST_PAGE = -1;
 
     public static final String TABLE = "book";
     public static final String COL_ID = "_id";
@@ -30,6 +29,7 @@ public class Book implements Serializable {
     public static final String COL_CHAPTER = "chapter";
     public static final String COL_LASTPAGE = "last_page";
     public static final String COL_LASTCHAPTER = "last_chapter";
+    public static final String COL_CHAPTERSCOUNT = "chapters_count";
 
     public static final String CREATE_TABLE = ""
             + "CREATE TABLE " + TABLE + "("
@@ -43,7 +43,8 @@ public class Book implements Serializable {
             + COL_PAGE + " INTEGER,"
             + COL_CHAPTER + " INTEGER,"
             + COL_LASTPAGE + " INTEGER,"
-            + COL_LASTCHAPTER + " INTEGER"
+            + COL_LASTCHAPTER + " INTEGER,"
+            + COL_CHAPTERSCOUNT + " TEXT"
             + ")";
 
     private long id;
@@ -58,6 +59,7 @@ public class Book implements Serializable {
     private int chapter;
     private int lastPage;
     private int lastChapter;
+    private String chaptersCount;
 
     public Book() {
     }
@@ -76,6 +78,7 @@ public class Book implements Serializable {
         book.chapter = Db.getInt(cursor, COL_CHAPTER);
         book.lastPage = Db.getInt(cursor, COL_LASTPAGE);
         book.lastChapter = Db.getInt(cursor, COL_LASTCHAPTER);
+        book.chaptersCount = Db.getString(cursor, COL_CHAPTERSCOUNT);
         return book;
     };
 
@@ -92,6 +95,7 @@ public class Book implements Serializable {
         values.put(COL_CHAPTER, chapter);
         values.put(COL_LASTPAGE, lastPage);
         values.put(COL_LASTCHAPTER, lastChapter);
+        values.put(COL_CHAPTERSCOUNT, chaptersCount);
 
         return values;
     }
@@ -192,5 +196,13 @@ public class Book implements Serializable {
 
     public void setLastChapter(int lastChapter) {
         this.lastChapter = lastChapter;
+    }
+
+    public String getChaptersCount() {
+        return chaptersCount;
+    }
+
+    public void setChaptersCount(String chaptersCount) {
+        this.chaptersCount = chaptersCount;
     }
 }

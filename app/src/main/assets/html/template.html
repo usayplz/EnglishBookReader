@@ -52,16 +52,18 @@
     </div>
 
     <script type="text/javascript">
-        var columnWidth;
-        var columnGap;
-        var columnCount;
+        var columnWidth, columnGap, columnCount, relativePage, lastPage;
 
     	function setPage(page) {
+    	    var currentRelativePage = parseInt(relativePage, 10) + parseInt(page, 10);
         	$('#content').css('left', -1 * (page - 1) * (columnWidth + columnGap));
-        	$('#page').html('&equiv;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + page + " / " + columnCount + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&equiv;');
+        	$('#page').html('&equiv;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + currentRelativePage + " - " + lastPage + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&equiv;');
         }
 
-        function init(font_family, font_size, font_color, background_color, margin, page) {
+        function init(font_family, font_size, font_color, background_color, margin, page, relative_page, last_page) {
+            relativePage = relative_page;
+            lastPage = last_page;
+
             // settings
             $('#container').css('font-family', "'" + font_family + "'");
             $('#content').css('font-size', font_size + 'px !important');

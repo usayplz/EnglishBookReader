@@ -100,8 +100,8 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     }
 
     @Override
-    public void showContent(File content, Settings settings, int page) {
-        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, bugFixLessV19 ? -2 : page));
+    public void showContent(File content, Settings settings, int page, int relativePage, int lastPage) {
+        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, bugFixLessV19 ? ReadingPresenter.PAGE_BUG : page, relativePage, lastPage));
         if (bugFixLessV19) {
             bugFixLessV19 = false;
             presenter.getContent();
@@ -141,7 +141,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PreferencesActivity.SETTINGS_CHANGED_REQUEST && resultCode == Activity.RESULT_OK) {
-            presenter.getContent();
+            presenter.getContent(true);
         }
     }
 }

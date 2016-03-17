@@ -34,6 +34,8 @@ public class BookView extends WebView {
     private IBookListener listener;
     private Settings settings;
     private int page;
+    private int relativePage;
+    private int lastPage;
 
     public BookView(Context context) {
         super(context);
@@ -71,7 +73,6 @@ public class BookView extends WebView {
         webSettings.setSupportZoom(false);
 
         // speed?
-        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         this.requestFocus(View.FOCUS_DOWN);
 
@@ -89,13 +90,15 @@ public class BookView extends WebView {
             @Override
             public void onPageFinished(WebView view, String url) {
                 if (settings != null) {
-                    loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s', '%s');",
+                    loadUrl(String.format("javascript: init('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
                             settings.getFontFamily(),
                             settings.getFontSize(),
                             Strings.colorToRGB(settings.getFontColor()),
                             Strings.colorToRGB(settings.getBackgroundColor()),
                             settings.getMargin(),
-                            page));
+                            page,
+                            relativePage,
+                            lastPage));
                 }
 
 
@@ -118,8 +121,10 @@ public class BookView extends WebView {
         });
     }
 
-    public void loadContent(File content, Settings settings, int page) {
+    public void loadContent(File content, Settings settings, int page, int relativePage, int lastPage) {
         this.page = page;
+        this.relativePage = relativePage;
+        this.lastPage = lastPage;
         this.settings = settings;
         this.loadUrl(Uri.fromFile(content).toString());
     }

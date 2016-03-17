@@ -25,9 +25,11 @@ public class EpubManager extends AbstractBookManager {
         Book book = new Book();
         book.setType(BookType.EPUB);
         book.setPage(Book.FIRST_PAGE);
+        book.setChapter(0);
         book.setLastPage(0);
         book.setFile(filePath);
         book.setDir(dir.getPath());
+        book.setChaptersCount("");
 
         try {
             nl.siegmann.epublib.domain.Book epubBook = (new EpubReader()).readEpub(new FileInputStream(filePath));
