@@ -53,9 +53,9 @@ public class EpubManager extends AbstractBookManager {
 
                 File bookFile = getBookFile(dir, book.getChapter());
                 // TODO UNCOMMENT
-//                if (bookFile.exists()) {
-//                    return Observable.just(bookFile);
-//                }
+                if (bookFile.exists()) {
+                    return Observable.just(bookFile);
+                }
 
                 if (!isReady(book)) {
                     FileUtils.unzip(file, dir);

@@ -72,6 +72,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
                                 }
                             },
                             throwable -> {
+                                Log.d(throwable.getMessage());
                                 if (getView() != null) {
                                     this.isLoading = false;
                                     getView().hideLoading();
@@ -82,6 +83,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         }
     }
 
+    // set relative page
     public void getContent(int page) {
         int chapter_page_count = 0;
         int chapter = 0;
@@ -100,8 +102,9 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         getContent();
     }
 
-    public void getContent(boolean reload) {
-        if (reload && getView() != null) {
+    // recount pages
+    public void getContent(boolean recount) {
+        if (recount && getView() != null) {
             settings = new PreferencesManager().getPreferences(getView().getContext());
             book.setLastPage(0);
             book.setChaptersCount("");
@@ -148,7 +151,6 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void setPageCount(int lastPage) {
-        Log.d(String.format("page: %s, chapter: %s, chapters: %s", book.getPage(), book.getChapter(), book.getChaptersCount()));
         if (book.getPage() == PAGE_COUNTING) {
             book.setLastPage(book.getLastPage() + lastPage);
             book.setChaptersCount(Strings.isEmpty(book.getChaptersCount()) ? String.valueOf(lastPage) : book.getChaptersCount() + "," + lastPage);

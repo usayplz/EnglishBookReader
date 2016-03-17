@@ -32,7 +32,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     private ReadingPresenter presenter;
     private MenuView menuView;
-    private boolean bugFixLessV19 = true;
+    private boolean bugFixWebView = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,11 +101,10 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     @Override
     public void showContent(File content, Settings settings, int page, int relativePage, int lastPage) {
-        getActivity().runOnUiThread(() -> bookView.loadContent(content, settings, bugFixLessV19 ? ReadingPresenter.PAGE_BUG : page, relativePage, lastPage));
-        if (bugFixLessV19) {
-            bugFixLessV19 = false;
-            presenter.getContent();
-        }
+        getActivity().runOnUiThread(() -> {
+                int chapterPage = bugFixWebView ? ReadingPresenter.PAGE_BUG : page;
+                bookView.loadContent(content, settings, chapterPage, relativePage, lastPage);
+        });
     }
 
     @Override
@@ -130,7 +129,12 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     @Override
     public void onSetPageCount(int pagecount) {
-        presenter.setPageCount(pagecount);
+        if (bugFixWebView) {
+            bugFixWebView = false;
+            presenter.getContent();
+        } else {
+            presenter.setPageCount(pagecount);
+        }
     }
 
     @Override
