@@ -3,14 +3,15 @@ package com.usayplz.englishbookreader.libraly;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.db.BookDao;
+import com.usayplz.englishbookreader.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.manager.ScanDriveEngine;
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookType;
 import com.usayplz.englishbookreader.preference.UserData;
-import com.usayplz.englishbookreader.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.utils.Strings;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +77,26 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
             String filesDir = getView().getContext().getFilesDir().getPath();
 
             BookDao bookDao = new BookDao(getView().getContext());
-            bookDao.removeAll();
+            bookDao.getAll()
+                    .subscribe(
+                            books -> {
+                                if (getView() != null) {
+                                    for (Book book : books) {
+                                        File bookFile = new File(book.getFile());
+                                        if (!bookFile.exists()) {
+                                            bookDao.remove(book.getId());
+                                        }
+                                    }
+                                }
+                            },
+                            throwable -> {
+                                Log.d(throwable.getMessage());
+                                if (getView() != null) {
+                                    getView().hideLoading();
+                                    getView().showError(R.string.error_load_books);
+                                }
+                            }
+                    );
 
             ScanDriveEngine scanDriveEngine = new ScanDriveEngine();
             scanDriveEngine.find()
@@ -93,6 +113,10 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
                         return book;
                     })
                     .filter(book -> book != null && !Strings.isEmpty(book.getTitle()))
+                    .filter(book -> {
+                        Book bookDb = bookDao.getByFile(book.getFile());
+                        return bookDb == null; // don't add if exits
+                    })
                     .doOnNext(bookDao::add)
                     .doOnCompleted(() -> {
                         if (getView() != null) {

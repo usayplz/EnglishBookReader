@@ -65,4 +65,10 @@ public class BookDao {
     public void updateLastPage() {
         db.execute(String.format("update %s set %s = 0, %s = ''", Book.TABLE, Book.COL_LASTPAGE, Book.COL_CHAPTERSCOUNT));
     }
+
+    public Book getByFile(String file) {
+        Cursor cursor = db.query("select * from " + Book.TABLE+" where " + Book.COL_FILE + " = ?", file);
+        if (!cursor.moveToFirst()) return null;
+        return Book.MAPPER.call(cursor);
+    }
 }
