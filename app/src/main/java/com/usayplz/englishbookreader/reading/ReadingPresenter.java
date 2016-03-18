@@ -102,12 +102,16 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         getContent();
     }
 
-    // recount pages
+    // recount pages after update settings
     public void getContent(boolean recount) {
         if (recount && getView() != null) {
             settings = new PreferencesManager().getPreferences(getView().getContext());
             book.setLastPage(0);
             book.setChaptersCount("");
+
+            // remove all page counters
+            new BookDao(getView().getContext()).updateLastPage();
+
             getContent();
         }
     }

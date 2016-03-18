@@ -61,4 +61,8 @@ public class BookDao {
     public void update(Book book) {
         db.update(Book.TABLE, book.getContentValues(), Book.COL_ID + " = ?", String.valueOf(book.getId()));
     }
+
+    public void updateLastPage() {
+        db.execute(String.format("update %s set %s = 0, %s = ''", Book.TABLE, Book.COL_LASTPAGE, Book.COL_CHAPTERSCOUNT));
+    }
 }
