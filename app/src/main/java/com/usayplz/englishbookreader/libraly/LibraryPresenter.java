@@ -77,6 +77,8 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
             String filesDir = getView().getContext().getFilesDir().getPath();
 
             BookDao bookDao = new BookDao(getView().getContext());
+
+            // remove not found
             bookDao.getAll()
                     .subscribe(
                             books -> {
@@ -98,6 +100,8 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
                             }
                     );
 
+
+            // search new books
             ScanDriveEngine scanDriveEngine = new ScanDriveEngine();
             scanDriveEngine.find()
                     .map(file -> {
