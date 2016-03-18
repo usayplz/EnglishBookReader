@@ -78,7 +78,7 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
 
             BookDao bookDao = new BookDao(getView().getContext());
 
-            // remove not found
+            // TODO make order getAll and scan
             bookDao.getAll()
                     .subscribe(
                             books -> {

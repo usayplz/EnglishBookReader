@@ -3,11 +3,11 @@ package com.usayplz.englishbookreader.reading;
 import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BasePresenter;
 import com.usayplz.englishbookreader.db.BookDao;
+import com.usayplz.englishbookreader.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
 import com.usayplz.englishbookreader.preference.UserData;
-import com.usayplz.englishbookreader.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.utils.FileUtils;
 import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.utils.Strings;
@@ -90,7 +90,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
         String[] chapters = book.getChaptersCount().split(",");
         for (int i = 0; i < chapters.length; i++) {
             int count = Integer.valueOf(chapters[i]);
-            if (chapter_page_count + count >= page || i+1 == chapters.length) {
+            if (chapter_page_count + count >= page || i + 1 == chapters.length) {
                 chapter = i;
                 break;
             }
