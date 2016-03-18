@@ -59,16 +59,16 @@ public class ScanDriveEngine {
     }
 
     public static String[] getStorageDirectories() {
-        final Set<String> rv = new HashSet<>();
+        final Set<String> result = new HashSet<>();
         final String rawExternalStorage = System.getenv("EXTERNAL_STORAGE");
         final String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
         final String rawEmulatedStorageTarget = System.getenv("EMULATED_STORAGE_TARGET");
 
         if (TextUtils.isEmpty(rawEmulatedStorageTarget)) {
             if (TextUtils.isEmpty(rawExternalStorage)) {
-                rv.add("/storage/sdcard0");
+                result.add("/storage/sdcard0");
             } else {
-                rv.add(rawExternalStorage);
+                result.add(rawExternalStorage);
             }
         } else {
             final String rawUserId;
@@ -88,16 +88,16 @@ public class ScanDriveEngine {
             }
             // /storage/emulated/0[1,2,...]
             if (TextUtils.isEmpty(rawUserId)) {
-                rv.add(rawEmulatedStorageTarget);
+                result.add(rawEmulatedStorageTarget);
             } else {
-                rv.add(rawEmulatedStorageTarget + File.separator + rawUserId);
+                result.add(rawEmulatedStorageTarget + File.separator + rawUserId);
             }
         }
 
         if (!TextUtils.isEmpty(rawSecondaryStoragesStr)) {
             final String[] rawSecondaryStorages = rawSecondaryStoragesStr.split(File.pathSeparator);
-            Collections.addAll(rv, rawSecondaryStorages);
+            Collections.addAll(result, rawSecondaryStorages);
         }
-        return rv.toArray(new String[rv.size()]);
+        return result.toArray(new String[result.size()]);
     }
 }

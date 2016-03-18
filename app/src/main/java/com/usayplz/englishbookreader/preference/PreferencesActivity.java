@@ -18,7 +18,7 @@ import com.usayplz.englishbookreader.R;
  * u.sayplz@gmail.com
  */
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
-    public static final int SETTINGS_CHANGED_REQUEST = 1002;
+    public static final int REQUEST_SETTINGS_CHANGED = 1002;
     private boolean isChanged;
 
     @Override

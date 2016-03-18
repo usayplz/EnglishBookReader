@@ -81,7 +81,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
                 switch (readingMenuItem) {
                     case SETTINGS:
                         Intent intent = new Intent(getActivity(), PreferencesActivity.class);
-                        startActivityForResult(intent, PreferencesActivity.SETTINGS_CHANGED_REQUEST);
+                        startActivityForResult(intent, PreferencesActivity.REQUEST_SETTINGS_CHANGED);
                         break;
                     case LIBRARY:
                         startActivity(new Intent(getActivity(), LibraryActivity.class));
@@ -102,8 +102,8 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     @Override
     public void showContent(File content, Settings settings, int page, int relativePage, int lastPage) {
         getActivity().runOnUiThread(() -> {
-                int chapterPage = bugFixWebView ? ReadingPresenter.PAGE_BUG : page;
-                bookView.loadContent(content, settings, chapterPage, relativePage, lastPage);
+            int chapterPage = bugFixWebView ? ReadingPresenter.PAGE_BUG : page;
+            bookView.loadContent(content, settings, chapterPage, relativePage, lastPage);
         });
     }
 
@@ -112,6 +112,15 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
         bookView.setPage(page);
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PreferencesActivity.REQUEST_SETTINGS_CHANGED && resultCode == Activity.RESULT_OK) {
+            presenter.getContent(true);
+        }
+    }
+
+    // Implements BookView.IBookListener
     @Override
     public void onTextSelected(String word) {
         Toast.makeText(getContext(), word, Toast.LENGTH_LONG).show();
@@ -140,12 +149,5 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     @Override
     public void onMenuClicked() {
         presenter.createMenu();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PreferencesActivity.SETTINGS_CHANGED_REQUEST && resultCode == Activity.RESULT_OK) {
-            presenter.getContent(true);
-        }
     }
 }
