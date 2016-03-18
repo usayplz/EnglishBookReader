@@ -21,15 +21,19 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            padding: 0;
         }
 
         #content {
             position: relative;
             text-align: justify;
+            padding: 0;
         }
 
         #bottom {
             text-align: center;
+            padding: 0;
+            font-family: 'OpenSans-Regular';
         }
 
         #page {
@@ -37,6 +41,7 @@
             color: #999999;
             margin: 5px 0px 5px 0px;
             font-size: 16px;
+            padding: 0;
         }
     </style>
 </head>
@@ -52,7 +57,7 @@
     </div>
 
     <script type="text/javascript">
-        var columnWidth, columnGap, columnCount, relativePage, lastPage;
+        var columnWidth, columnGap, columnCount, relativePage, lastPage, gMargin;
 
     	function setPage(page) {
     	    var currentRelativePage = parseInt(relativePage, 10) + parseInt(page, 10);
@@ -63,14 +68,13 @@
         function init(font_family, font_size, font_color, background_color, margin, page, relative_page, last_page) {
             relativePage = relative_page;
             lastPage = last_page;
+            gMargin = margin;
 
             // settings
             $('#content').css('font-family', "'" + font_family + "'");
             $('#content').css('font-size', font_size + 'px !important');
             $('#content').css('color', font_color);
             $('#container').css('background-color', background_color);
-
-            $('#bottom').css('font-family', 'Chivo-Regular');
 
             // margin
             columnGap = margin * 2;
@@ -125,6 +129,8 @@
 
         // selection
         $('#content').on('click', function(event) {
+            if (checkClick(event)) return;
+
             var s = window.getSelection();
             s.modify('move','backward', 'word');
             s.modify('extend','forward', 'word');
@@ -133,6 +139,28 @@
             }
             s.modify('move','forward', 'character');
         });
+
+        $('#container').on('click', function(event) {
+            checkClick(event);
+        });
+
+        function checkClick(event) {
+            event = event || window.event;
+            event = jQuery.event.fix(event);
+            var x = event.clientX;
+            var y = event.clientY;
+
+            if (x < gMargin) {
+                android.onPrevious();
+                event.stopPropagation();
+                return true;
+            } else if (x > (window.innerWidth - gMargin - 8)) {  // minus lag = 8
+                android.onNext();
+                event.stopPropagation();
+                return true;
+            }
+            return false;
+         }
 
         // menu
         $('#bottom').on('click', function(event) {

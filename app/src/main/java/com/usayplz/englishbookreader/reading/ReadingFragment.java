@@ -109,7 +109,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     @Override
     public void setPage(int page) {
-        bookView.setPage(page);
+        getActivity().runOnUiThread(() -> bookView.setPage(page));
     }
 
 

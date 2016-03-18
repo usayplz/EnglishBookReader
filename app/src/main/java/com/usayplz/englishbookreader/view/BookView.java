@@ -178,6 +178,16 @@ public class BookView extends WebView {
         if (listener != null) listener.onMenuClicked();
     }
 
+    @JavascriptInterface
+    public void onNext() {
+        if (listener != null) listener.onNext();
+    }
+
+    @JavascriptInterface
+    public void onPrevious() {
+        if (listener != null) listener.onPrevious();
+    }
+
     public void setListener(IBookListener listener) {
         this.listener = listener;
     }
