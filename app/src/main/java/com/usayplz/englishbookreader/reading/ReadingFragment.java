@@ -122,7 +122,7 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
 
     // Implements BookView.IBookListener
     @Override
-    public void onTextSelected(String word) {
+    public void onTextSelected(String word, String sentence) {
         Toast.makeText(getContext(), word, Toast.LENGTH_LONG).show();
     }
 

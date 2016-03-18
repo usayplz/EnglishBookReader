@@ -164,8 +164,8 @@ public class BookView extends WebView {
     }
 
     @JavascriptInterface
-    public void onTextSelected(String word) {
-        if (listener != null) listener.onTextSelected(word);
+    public void onTextSelected(String word, String sentence) {
+        if (listener != null) listener.onTextSelected(word, sentence);
     }
 
     @JavascriptInterface
@@ -193,7 +193,7 @@ public class BookView extends WebView {
     }
 
     public interface IBookListener {
-        void onTextSelected(String word);
+        void onTextSelected(String word, String sentence);
 
         void onNext();
 

@@ -130,8 +130,11 @@
             var s = window.getSelection();
             s.modify('move','backward', 'word');
             s.modify('extend','forward', 'word');
-            if (s.toString() != '') {
-                android.onTextSelected(s.toString());
+            var str = s.toString();
+            if (/^[a-zA-Z\-]+$/.test(str)) {
+                s.modify('move','backward', 'sentence');
+                s.modify('extend','forward', 'sentence');
+                android.onTextSelected(s.toString(), s.toString());
             }
             s.modify('move','forward', 'character');
         });
