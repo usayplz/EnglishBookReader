@@ -158,6 +158,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
             if (book.getChapter() == book.getLastChapter()) {
                 book.setPage(currentPage);
                 book.setChapter(currentChapter);
+                saveBook();
             } else {
                 book.setChapter(book.getChapter() + 1);
             }

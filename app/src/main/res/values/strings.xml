@@ -4,7 +4,7 @@
     <!-- Errors-->
     <string name="error_open_book">Could not open book</string>
     <string name="error_limit_font_size">Font size must be between 10 and 30</string>
-    <string name="error_limit_margin">Margin must be between 5 and 70</string>
+    <string name="error_limit_margin">Margin must be between 20 and 50</string>
     <string name="error_load_books">Could not load books</string>
     <string name="error_find_books">Could not find books</string>
 
@@ -20,10 +20,6 @@
     <!-- Progress bar -->
     <string name="progress_message">Loading…</string>
     <string name="progress_loading_book">Loading book…</string>
-
-    <!-- Defaults-->
-    <string name="default_book_authors">Unknown</string>
-    <string name="default_book_title">Unknown</string>
 
     <!-- Others-->
     <string name="search">Search</string>
