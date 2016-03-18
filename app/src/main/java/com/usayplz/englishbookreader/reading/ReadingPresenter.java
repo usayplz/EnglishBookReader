@@ -7,7 +7,7 @@ import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.Settings;
 import com.usayplz.englishbookreader.preference.PreferencesManager;
 import com.usayplz.englishbookreader.preference.UserData;
-import com.usayplz.englishbookreader.reading.manager.AbstractBookManager;
+import com.usayplz.englishbookreader.manager.AbstractBookManager;
 import com.usayplz.englishbookreader.utils.FileUtils;
 import com.usayplz.englishbookreader.utils.Log;
 import com.usayplz.englishbookreader.utils.Strings;

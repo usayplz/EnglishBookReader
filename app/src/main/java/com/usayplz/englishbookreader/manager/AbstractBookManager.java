@@ -1,4 +1,4 @@
-package com.usayplz.englishbookreader.reading.manager;
+package com.usayplz.englishbookreader.manager;
 
 import com.usayplz.englishbookreader.model.Book;
 import com.usayplz.englishbookreader.model.BookType;

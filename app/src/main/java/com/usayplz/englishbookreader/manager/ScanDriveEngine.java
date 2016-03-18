@@ -1,4 +1,4 @@
-package com.usayplz.englishbookreader.libraly;
+package com.usayplz.englishbookreader.manager;
 
 import android.os.Build;
 import android.os.Environment;

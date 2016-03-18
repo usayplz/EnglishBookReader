@@ -1,5 +1,7 @@
-package com.usayplz.englishbookreader.reading.manager;
+package com.usayplz.englishbookreader.manager;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 import com.usayplz.englishbookreader.model.Book;
@@ -8,7 +10,10 @@ import com.usayplz.englishbookreader.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import nl.siegmann.epublib.epub.EpubReader;
 import rx.Observable;
@@ -18,10 +23,13 @@ import rx.Observable;
  * u.sayplz@gmail.com
  */
 public class EpubManager extends AbstractBookManager {
+    private static final String DIR_COVER = "covers";
+
     @Override
     public Book getBookInfo(String filePath, String dirPath) {
         File file = new File(filePath);
         File dir = FileUtils.concatToFile(dirPath, file.getName() + file.length());
+
         Book book = new Book();
         book.setType(BookType.EPUB);
         book.setPage(Book.FIRST_PAGE);
@@ -37,11 +45,35 @@ public class EpubManager extends AbstractBookManager {
             book.setAuthor(authors);
             book.setTitle(epubBook.getTitle());
             book.setLastChapter(epubBook.getContents().size() - 1);
+
+            // save cover image
+            File coverImage = saveCoverImage(dir.getPath(), epubBook.getCoverImage().getInputStream());
+            if (coverImage.exists()) {
+                book.setCoverImage(coverImage.getPath());
+            }
         } catch (Exception e) {
             return null;
         }
 
         return book;
+    }
+
+    private File saveCoverImage(String bookPath, InputStream coverImageStream) {
+        int separator = bookPath.lastIndexOf("/");
+        File coverImage = FileUtils.concatToFile(bookPath.substring(1, separator), DIR_COVER, bookPath.substring(separator + 1) + ".png");
+
+        try {
+            File coverDir = FileUtils.concatToFile(bookPath.substring(1, separator), DIR_COVER);
+            if (!coverDir.exists()) coverDir.mkdir();
+
+            OutputStream fos = new FileOutputStream(coverImage); // context.openFileOutput(picName, Context.MODE_PRIVATE);
+            Bitmap b = BitmapFactory.decodeStream(coverImageStream);
+            b.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+        } catch (IOException ignored) {
+        }
+
+        return coverImage;
     }
 
     @Override
