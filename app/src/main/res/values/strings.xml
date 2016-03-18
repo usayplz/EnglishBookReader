@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EnglishBookReader</string>
+    <string name="app_name">ABC Reader</string>
 
     <!-- Errors-->
     <string name="error_open_book">Could not open book</string>
