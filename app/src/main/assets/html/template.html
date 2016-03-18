@@ -65,14 +65,19 @@
             lastPage = last_page;
 
             // settings
-            $('#container').css('font-family', "'" + font_family + "'");
+            $('#content').css('font-family', "'" + font_family + "'");
             $('#content').css('font-size', font_size + 'px !important');
             $('#content').css('color', font_color);
             $('#container').css('background-color', background_color);
 
+            $('#bottom').css('font-family', 'Chivo-Regular');
+
             // margin
             columnGap = margin * 2;
             var marginBottom = margin * 2;
+            if (margin < 30) {
+                marginBottom = margin*1 + 30;
+            }
             $('#content').css({
                 'margin-top': margin + 'px',
                 'margin-left': margin + 'px',

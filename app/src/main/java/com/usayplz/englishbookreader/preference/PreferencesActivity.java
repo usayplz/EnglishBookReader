@@ -95,7 +95,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         if (preference.getKey().equals(getString(R.string.pref_margin))) {
             try {
                 int newIntValue = Integer.valueOf(newValue.toString());
-                if (newIntValue < 20 || newIntValue > 50) {
+                if (newIntValue < 5 || newIntValue > 70) {
                     Toast.makeText(this, R.string.error_limit_margin, Toast.LENGTH_SHORT).show();
                     return false;
                 }
