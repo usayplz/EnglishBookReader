@@ -130,7 +130,10 @@ public class LibraryPresenter extends BasePresenter<LibraryView> {
                     })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(); // TODO need to show errors?
+                    .subscribe(
+                            book -> {},
+                            throwable -> {}
+                    ); // TODO need to show errors?
         }
     }
 

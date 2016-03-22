@@ -55,7 +55,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
 
             if (book.getLastPage() == 0) { // PAGE_COUNTING fucking cheat, see setLastPage
                 getView().showLoading(R.string.progress_loading_book);
-                currentPage = book.getPage() > 0 ? book.getPage() : Book.FIRST_PAGE;
+                currentPage = book.getPage() > 0 ? book.getPage() : Book.PAGE_FIRST;
                 currentChapter = book.getChapter();
                 book.setPage(PAGE_COUNTING);
                 book.setChapter(0);
@@ -123,7 +123,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     }
 
     public void saveBook() {
-        if (getView() != null) {
+        if (getView() != null && book != null) {
             new BookDao(getView().getContext()).update(book);
         }
     }
@@ -136,7 +136,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
             getView().setPage(book.getPage());
         } else if (book.getChapter() < book.getLastChapter()) {
             book.setChapter(book.getChapter() + 1);
-            book.setPage(Book.FIRST_PAGE);
+            book.setPage(Book.PAGE_FIRST);
             getContent();
         }
     }
@@ -144,7 +144,7 @@ public class ReadingPresenter extends BasePresenter<ReadingView> {
     public void previousPage() {
         if (isLoading || getView() == null) return;
 
-        if (book.getPage() > Book.FIRST_PAGE) {
+        if (book.getPage() > Book.PAGE_FIRST) {
             book.setPage(book.getPage() - 1);
             getView().setPage(book.getPage());
         } else if (book.getChapter() > 0) {

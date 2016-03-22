@@ -32,7 +32,7 @@ public class EpubManager extends AbstractBookManager {
 
         Book book = new Book();
         book.setType(BookType.EPUB);
-        book.setPage(Book.FIRST_PAGE);
+        book.setPage(Book.PAGE_FIRST);
         book.setChapter(0);
         book.setLastPage(0);
         book.setFile(filePath);
@@ -47,9 +47,11 @@ public class EpubManager extends AbstractBookManager {
             book.setLastChapter(epubBook.getContents().size() - 1);
 
             // save cover image
-            File coverImage = saveCoverImage(dir.getPath(), epubBook.getCoverImage().getInputStream());
-            if (coverImage.exists()) {
-                book.setCoverImage(coverImage.getPath());
+            if (epubBook.getCoverImage() != null) {
+                File coverImage = saveCoverImage(dir.getPath(), epubBook.getCoverImage().getInputStream());
+                if (coverImage != null && coverImage.exists()) {
+                    book.setCoverImage(coverImage.getPath());
+                }
             }
         } catch (Exception e) {
             return null;
@@ -59,10 +61,11 @@ public class EpubManager extends AbstractBookManager {
     }
 
     private File saveCoverImage(String bookPath, InputStream coverImageStream) {
-        int separator = bookPath.lastIndexOf("/");
-        File coverImage = FileUtils.concatToFile(bookPath.substring(1, separator), DIR_COVER, bookPath.substring(separator + 1) + ".png");
-
         try {
+            int separator = bookPath.lastIndexOf("/");
+            File coverImage = FileUtils.concatToFile(bookPath.substring(1, separator), DIR_COVER, bookPath.substring(separator + 1) + ".png");
+
+
             File coverDir = FileUtils.concatToFile(bookPath.substring(1, separator), DIR_COVER);
             if (!coverDir.exists()) coverDir.mkdir();
 
@@ -70,10 +73,10 @@ public class EpubManager extends AbstractBookManager {
             Bitmap b = BitmapFactory.decodeStream(coverImageStream);
             b.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
-        } catch (IOException ignored) {
+            return coverImage;
+        } catch (Exception e) {
+            return null;
         }
-
-        return coverImage;
     }
 
     @Override

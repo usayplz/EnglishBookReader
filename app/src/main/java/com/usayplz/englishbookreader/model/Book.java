@@ -15,7 +15,7 @@ import rx.functions.Func1;
  */
 
 public class Book implements Serializable {
-    public static final int FIRST_PAGE = 1;
+    public static final int PAGE_FIRST = 1;
 
     public static final String TABLE = "book";
     public static final String COL_ID = "_id";
