@@ -13,6 +13,7 @@ import com.usayplz.englishbookreader.R;
 import com.usayplz.englishbookreader.base.BaseFragment;
 import com.usayplz.englishbookreader.libraly.LibraryActivity;
 import com.usayplz.englishbookreader.model.Settings;
+import com.usayplz.englishbookreader.stemmer.EnglishStemmer;
 import com.usayplz.englishbookreader.preference.PreferencesActivity;
 import com.usayplz.englishbookreader.view.BookView;
 import com.usayplz.englishbookreader.view.MenuView;
@@ -123,7 +124,10 @@ public class ReadingFragment extends BaseFragment implements ReadingView, BookVi
     // Implements BookView.IBookListener
     @Override
     public void onTextSelected(String word, String sentence) {
-        Toast.makeText(getContext(), word, Toast.LENGTH_LONG).show();
+        EnglishStemmer stemmer = new EnglishStemmer();
+        stemmer.setCurrent(word);
+        String result = stemmer.stem() ? stemmer.getCurrent() : word;
+        Toast.makeText(getContext(), sentence, Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -125,41 +125,16 @@
 
         // selection
         $('#content').on('click', function(event) {
-            if (checkClick(event)) return;
-
             var s = window.getSelection();
             s.modify('move','backward', 'word');
             s.modify('extend','forward', 'word');
-            var str = s.toString();
-            if (/^[a-zA-Z\-]+$/.test(str)) {
-                s.modify('move','backward', 'sentence');
+            var word = s.toString();
+            if (word != "") {
                 s.modify('extend','forward', 'sentence');
-                android.onTextSelected(s.toString(), s.toString());
+                android.onTextSelected(word, s.toString());
             }
             s.modify('move','forward', 'character');
         });
-
-        $('#container').on('click', function(event) {
-            checkClick(event);
-        });
-
-        function checkClick(event) {
-            event = event || window.event;
-            event = jQuery.event.fix(event);
-            var x = event.clientX;
-            var y = event.clientY;
-
-            if (x < gMargin) {
-                android.onPrevious();
-                event.stopPropagation();
-                return true;
-            } else if (x > (window.innerWidth - gMargin - 8)) {  // minus lag = 8
-                android.onNext();
-                event.stopPropagation();
-                return true;
-            }
-            return false;
-         }
 
         // menu
         $('#bottom').on('click', function(event) {

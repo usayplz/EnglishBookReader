@@ -36,6 +36,7 @@ public class BookView extends WebView {
     private int page;
     private int relativePage;
     private int lastPage;
+    private long onDown;
 
     public BookView(Context context) {
         super(context);
@@ -136,6 +137,7 @@ public class BookView extends WebView {
                 posX = event.getX() / getWidth();
                 posY = event.getY() / getHeight();
                 isSwiping = true;
+                onDown = System.currentTimeMillis();
                 break;
             case MotionEvent.ACTION_UP:
                 if (!isSwiping) {
@@ -146,6 +148,17 @@ public class BookView extends WebView {
                         if (listener != null) listener.onNext();
                     }
                     return false;
+                } else {
+                    long now = System.currentTimeMillis();
+                    if (now - onDown < 500 && listener != null) {
+                        if (posX < 0.08) {
+                            listener.onPrevious();
+                            return false;
+                        } else if (posX > 0.92) {
+                            listener.onNext();
+                            return false;
+                        }
+                    }
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
