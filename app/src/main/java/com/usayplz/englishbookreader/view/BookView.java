@@ -27,6 +27,7 @@ import java.io.File;
  */
 public class BookView extends WebView {
     private static final float SCROLL_THRESHOLD = 0.1f;
+    private static final float EDGE_THRESHOLD = 0.08f;
 
     private float posX;
     private float posY;
@@ -151,10 +152,10 @@ public class BookView extends WebView {
                 } else {
                     long now = System.currentTimeMillis();
                     if (now - onDown < 500 && listener != null) {
-                        if (posX < 0.08) {
+                        if (posX < EDGE_THRESHOLD) {
                             listener.onPrevious();
                             return false;
-                        } else if (posX > 0.92) {
+                        } else if (posX > (1 - EDGE_THRESHOLD)) {
                             listener.onNext();
                             return false;
                         }
