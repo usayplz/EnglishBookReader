@@ -61,9 +61,6 @@ public class Book implements Serializable {
     private int lastChapter;
     private String chaptersCount;
 
-    public Book() {
-    }
-
     public static final Func1<Cursor, Book> MAPPER = cursor -> {
         Book book = new Book();
         book.id = Db.getLong(cursor, COL_ID);
